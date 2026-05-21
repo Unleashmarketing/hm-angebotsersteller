@@ -833,12 +833,32 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
     </div>
 
     <button class="btn btn-save" onclick="saveDraft()">💾 Als Entwurf speichern</button>
-    <button class="btn btn-print" onclick="triggerPrint()">🖨️ Angebot drucken / als PDF</button>
+    <button class="btn btn-print" onclick="showPrintHint()">🖨️ Angebot drucken / als PDF</button>
   </div>
 </aside>
 
+<!-- =============== PRINT HINT MODAL =============== -->
+<div id="print-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;padding:28px 30px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:inherit;">
+    <div style="font-size:1.1rem;font-weight:800;color:#0F3D56;margin-bottom:6px;">Vor dem Drucken: URL ausblenden</div>
+    <div style="font-size:0.82rem;color:#5B5B5B;margin-bottom:16px;line-height:1.5;">Der Browser zeigt standardmäßig die URL am unteren Seitenrand an. So entfernst du sie:</div>
+    <ol style="font-size:0.83rem;color:#1A1A1A;line-height:1.8;padding-left:18px;margin-bottom:20px;">
+      <li>Druckdialog öffnet sich gleich</li>
+      <li>Klicke auf <strong>„Weitere Einstellungen"</strong></li>
+      <li>Deaktiviere <strong>„Kopf- und Fußzeilen"</strong></li>
+      <li>Dann auf <strong>„Drucken"</strong> klicken</li>
+    </ol>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closePrintHint()" style="flex:1;padding:10px;border:1.5px solid #DCD5C8;border-radius:6px;background:#fff;font-family:inherit;font-weight:600;font-size:0.85rem;cursor:pointer;color:#5B5B5B;">Abbrechen</button>
+      <button onclick="doPrint()" style="flex:2;padding:10px;border:none;border-radius:6px;background:#2A9D8F;color:#fff;font-family:inherit;font-weight:700;font-size:0.85rem;cursor:pointer;">Verstanden – Drucken starten</button>
+    </div>
+  </div>
+</div>
+
 <!-- =============== PREVIEW =============== -->
 <main class="preview-panel">
+
+  <!-- SEITE 1: Anschreiben -->
   <article class="a4-page" id="page1">
 
     <!-- Logo top right -->
@@ -865,8 +885,36 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
     <p style="font-size:10pt;margin-bottom:3mm;font-weight:600" id="prev-greeting">Sehr geehrte Damen und Herren,</p>
     <div class="intro-text" id="prev-intro"></div>
 
+    <!-- Footer Seite 1 -->
+    <div class="doc-footer">
+      <div>
+        <strong>HeinzelMänner GmbH</strong>
+        Hausmeister Dienste und<br>Gebäude Service<br>
+        Im Hagen 4<br>69181 Leimen
+      </div>
+      <div>
+        <strong>Kontakt</strong>
+        Tel.: 06224 / 925 67 00<br>
+        Mobil: 0162 6151832<br>
+        info@hm-sanierung.com
+      </div>
+      <div>
+        <strong>Geschäftsführer</strong>
+        Sascha Heck<br>
+        USt-IdNr.<br>DE 192 272 349
+      </div>
+    </div>
+
+  </article>
+
+  <!-- SEITE 2+: Angebot / Kalkulation -->
+  <article class="a4-page" id="page2">
+
+    <!-- Logo top right -->
+    <img class="print-logo" src="HM-Logo.svg" alt="HeinzelMänner Logo">
+
     <!-- Object summary -->
-    <div class="object-grid" style="page-break-before:always;padding-top:0">
+    <div class="object-grid">
       <div><div class="lbl">Objekttyp</div><div class="val" id="prev-obj-type">3-Zimmer-Wohnung</div></div>
       <div><div class="lbl">Adresse</div><div class="val" id="prev-obj-addr">–</div></div>
       <div><div class="lbl">Etage</div><div class="val" id="prev-obj-etage">EG</div></div>
@@ -922,7 +970,7 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
       <div class="sig">Unterschrift Auftraggeber</div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer Seite 2+ -->
     <div class="doc-footer">
       <div>
         <strong>HeinzelMänner GmbH</strong>
@@ -991,7 +1039,15 @@ const MIN_AUFTRAG = 590;
 const MWST = 0.19;
 
 // =============== PRINT TRIGGER ===============
-function triggerPrint(){
+function showPrintHint(){
+  const m = document.getElementById('print-modal');
+  m.style.display = 'flex';
+}
+function closePrintHint(){
+  document.getElementById('print-modal').style.display = 'none';
+}
+function doPrint(){
+  closePrintHint();
   const origTitle = document.title;
   document.title = ' ';
   setTimeout(() => {
@@ -1255,7 +1311,7 @@ function render(){
   document.getElementById('hdr-offer-id').textContent = meta.offerId || 'AG-···';
 
   const sigOn = document.getElementById('opt-signature').checked;
-  document.getElementById('page1').classList.toggle('show-signature', sigOn);
+  document.getElementById('page2').classList.toggle('show-signature', sigOn);
 
   document.getElementById('live-total').textContent = fmt(calc.brutto);
   document.getElementById('live-breakdown').textContent =
