@@ -35,7 +35,7 @@ body{
 
 @page{
   size:A4 portrait;
-  margin:8mm 0mm 22mm 0mm;
+  margin:0;
 }
 
 /* =============== EDITOR PANEL =============== */
@@ -524,19 +524,26 @@ body{
   .a4-page{
     box-shadow:none;
     margin:0;
-    padding:0 14mm 28mm 14mm;
+    padding:14mm 14mm 28mm 14mm;
     width:100%;
-    min-height:0;
+    min-height:297mm;
     display:block;
-    page-break-after:auto;
+    page-break-after:always;
+    break-after:always;
     overflow:visible;
     position:relative;
+  }
+
+  /* Letzte Seite: kein erzwungener Umbruch danach */
+  #page2{
+    page-break-after:auto;
+    break-after:auto;
   }
 
   /* Logo innerhalb .a4-page absolut positioniert */
   .print-logo{
     position:absolute;
-    top:0;
+    top:14mm;
     right:14mm;
     width:30mm;
     height:30mm;
@@ -606,7 +613,7 @@ body{
 <!-- =============== EDITOR =============== -->
 <aside class="editor-panel">
   <div class="editor-head">
-    <img class="logo-svg" src="HM-Logo.svg" alt="HeinzelMänner Logo">
+    <img class="logo-svg" src="HM Logo.svg" alt="HeinzelMänner Logo">
     <div>
       <h1>Angebot kalkulieren</h1>
       <div class="sub" id="hdr-offer-id">AG-···-2026</div>
@@ -862,7 +869,7 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
   <article class="a4-page" id="page1">
 
     <!-- Logo top right -->
-    <img class="print-logo" src="HM-Logo.svg" alt="HeinzelMänner Logo">
+    <img class="print-logo" src="HM Logo.svg" alt="HeinzelMänner Logo">
 
     <!-- Sender mini-line -->
     <div class="sender-line">HeinzelMänner GmbH · Im Hagen 4 · 69181 Leimen</div>
@@ -911,7 +918,7 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
   <article class="a4-page" id="page2">
 
     <!-- Logo top right -->
-    <img class="print-logo" src="HM-Logo.svg" alt="HeinzelMänner Logo">
+    <img class="print-logo" src="HM Logo.svg" alt="HeinzelMänner Logo">
 
     <!-- Object summary -->
     <div class="object-grid">
