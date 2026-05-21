@@ -35,7 +35,7 @@ body{
 
 @page{
   size:A4 portrait;
-  margin:10mm 0mm 28mm 0mm;
+  margin:8mm 0mm 22mm 0mm;
 }
 
 /* =============== EDITOR PANEL =============== */
@@ -248,7 +248,7 @@ body{
   width:210mm;
   min-height:297mm;
   background:#fff;
-  padding:14mm 20mm 30mm;
+  padding:14mm 14mm 30mm;
   box-shadow:0 0 22px rgba(0,0,0,0.4);
   box-sizing:border-box;
   position:relative;
@@ -265,7 +265,7 @@ body{
 .print-logo{
   position:absolute;
   top:14mm;
-  right:20mm;
+  right:14mm;
   width:30mm;
   height:30mm;
 }
@@ -469,9 +469,9 @@ body{
 /* Footer */
 .doc-footer{
   position:absolute;
-  bottom:10mm;
-  left:20mm;
-  right:20mm;
+  bottom:6mm;
+  left:14mm;
+  right:14mm;
   display:grid;
   grid-template-columns:repeat(3, 1fr);
   gap:6mm;
@@ -524,7 +524,7 @@ body{
   .a4-page{
     box-shadow:none;
     margin:0;
-    padding:0 20mm 32mm 20mm;
+    padding:0 14mm 28mm 14mm;
     width:100%;
     min-height:0;
     display:block;
@@ -537,7 +537,7 @@ body{
   .print-logo{
     position:absolute;
     top:0;
-    right:20mm;
+    right:14mm;
     width:30mm;
     height:30mm;
   }
@@ -545,9 +545,9 @@ body{
   /* Footer: fixiert am unteren Seitenrand jeder Seite */
   .doc-footer{
     position:fixed;
-    bottom:4mm;
-    left:20mm;
-    right:20mm;
+    bottom:2mm;
+    left:14mm;
+    right:14mm;
     margin:0;
     background:white;
   }
@@ -866,7 +866,7 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
     <div class="intro-text" id="prev-intro"></div>
 
     <!-- Object summary -->
-    <div class="object-grid">
+    <div class="object-grid" style="page-break-before:always;padding-top:0">
       <div><div class="lbl">Objekttyp</div><div class="val" id="prev-obj-type">3-Zimmer-Wohnung</div></div>
       <div><div class="lbl">Adresse</div><div class="val" id="prev-obj-addr">–</div></div>
       <div><div class="lbl">Etage</div><div class="val" id="prev-obj-etage">EG</div></div>
@@ -992,12 +992,24 @@ const MWST = 0.19;
 
 // =============== PRINT TRIGGER ===============
 function triggerPrint(){
-  // Setzt den Dokumenttitel temporär leer, damit der Browser-Header keine Dateiinfos zeigt
+  // Unterdrückt Browser-eigene Kopf-/Fußzeilen (Datum, URL) im PDF-Druck
   const origTitle = document.title;
   document.title = ' ';
+
+  // Dynamisches Style-Tag für @page margin-Override
+  const styleEl = document.createElement('style');
+  styleEl.id = 'print-override';
+  styleEl.textContent = `@page { margin: 8mm 0 22mm 0 !important; }`;
+  document.head.appendChild(styleEl);
+
   setTimeout(() => {
     window.print();
-    setTimeout(() => { document.title = origTitle; }, 500);
+    setTimeout(() => {
+      document.title = origTitle;
+      const el = document.getElementById('print-override');
+      if (el) el.remove();
+    }, 500);
+  }, 80);
   }, 50);
 }
 
