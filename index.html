@@ -992,25 +992,12 @@ const MWST = 0.19;
 
 // =============== PRINT TRIGGER ===============
 function triggerPrint(){
-  // Unterdrückt Browser-eigene Kopf-/Fußzeilen (Datum, URL) im PDF-Druck
   const origTitle = document.title;
   document.title = ' ';
-
-  // Dynamisches Style-Tag für @page margin-Override
-  const styleEl = document.createElement('style');
-  styleEl.id = 'print-override';
-  styleEl.textContent = `@page { margin: 8mm 0 22mm 0 !important; }`;
-  document.head.appendChild(styleEl);
-
   setTimeout(() => {
     window.print();
-    setTimeout(() => {
-      document.title = origTitle;
-      const el = document.getElementById('print-override');
-      if (el) el.remove();
-    }, 500);
+    setTimeout(() => { document.title = origTitle; }, 500);
   }, 80);
-  }, 50);
 }
 
 // =============== INIT ===============
