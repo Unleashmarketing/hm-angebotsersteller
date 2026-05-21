@@ -495,120 +495,6 @@ body{
 .signature-row .sig{border-top:1px solid #1A1A1A;padding-top:1mm}
 
 /* =============== PRINT =============== */
-@media print{
-  html, body{
-    background:white;
-    margin:0;
-    padding:0;
-    height:auto;
-    width:auto;
-    overflow:visible;
-    display:block;
-  }
-  .editor-panel,
-  .no-print,
-  #flash-msg{
-    display:none !important;
-  }
-  .preview-panel{
-    padding:0;
-    margin:0;
-    background:white;
-    overflow:visible;
-    display:block;
-    width:100%;
-    gap:0;
-  }
-
-  .a4-page{
-    box-shadow:none;
-    margin:0;
-    padding:14mm 14mm 22mm 14mm;
-    width:100%;
-    min-height:297mm;
-    display:block;
-    page-break-after:always;
-    break-after:always;
-    overflow:visible;
-    position:relative;
-  }
-
-  /* Letzte Seite: kein erzwungener Umbruch danach */
-  #page2{
-    page-break-after:auto;
-    break-after:auto;
-  }
-
-  /* Logo nur auf Seite 1 */
-  .print-logo{
-    position:absolute;
-    top:14mm;
-    right:14mm;
-    width:30mm;
-    height:30mm;
-  }
-  #page2 .print-logo{
-    display:none !important;
-  }
-
-  /* Footer: absolut am unteren Rand, padding-bottom der Seite gibt genug Platz */
-  .doc-footer{
-    position:absolute;
-    bottom:6mm;
-    left:14mm;
-    right:14mm;
-    margin:0;
-    background:white;
-  }
-
-  /* Zahlung nicht von included-Box trennen */
-  .zahlung{
-    page-break-inside:avoid;
-    break-inside:avoid;
-    page-break-before:avoid;
-    break-before:avoid;
-  }
-
-  /* Tabellenkopf wiederholt sich auf Folgeseiten */
-  .calc-table thead{
-    display:table-header-group;
-  }
-  .calc-table tfoot{
-    display:table-footer-group;
-  }
-
-  /* Zerreiß-Schutz für wichtige Blöcke */
-  .object-grid,
-  .total-box,
-  .included,
-  .signature-row,
-  .tax-table,
-  .meta-table{
-    page-break-inside:avoid;
-    break-inside:avoid;
-  }
-
-  .calc-table tr{
-    page-break-inside:avoid;
-    break-inside:avoid;
-  }
-
-  h1, h2, h3, .doc-title, .doc-subtitle, .included h3{
-    page-break-after:avoid;
-    break-after:avoid;
-  }
-
-  p, .intro-text, .zahlung{
-    orphans:3;
-    widows:3;
-  }
-
-  *{
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;
-    color-adjust:exact !important;
-  }
-}
 
 @media (max-width: 1100px){
   body{flex-direction:column;height:auto;overflow:auto}
@@ -850,25 +736,16 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
     </div>
 
     <button class="btn btn-save" onclick="saveDraft()">💾 Als Entwurf speichern</button>
-    <button class="btn btn-print" onclick="showPrintHint()">🖨️ Angebot drucken / als PDF</button>
+    <button class="btn btn-print" onclick="exportPDF()">📄 Als PDF exportieren</button>
   </div>
 </aside>
 
-<!-- =============== PRINT HINT MODAL =============== -->
-<div id="print-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:12px;padding:28px 30px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:inherit;">
-    <div style="font-size:1.1rem;font-weight:800;color:#0F3D56;margin-bottom:6px;">Vor dem Drucken: URL ausblenden</div>
-    <div style="font-size:0.82rem;color:#5B5B5B;margin-bottom:16px;line-height:1.5;">Der Browser zeigt standardmäßig die URL am unteren Seitenrand an. So entfernst du sie:</div>
-    <ol style="font-size:0.83rem;color:#1A1A1A;line-height:1.8;padding-left:18px;margin-bottom:20px;">
-      <li>Druckdialog öffnet sich gleich</li>
-      <li>Klicke auf <strong>„Weitere Einstellungen"</strong></li>
-      <li>Deaktiviere <strong>„Kopf- und Fußzeilen"</strong></li>
-      <li>Dann auf <strong>„Drucken"</strong> klicken</li>
-    </ol>
-    <div style="display:flex;gap:10px;">
-      <button onclick="closePrintHint()" style="flex:1;padding:10px;border:1.5px solid #DCD5C8;border-radius:6px;background:#fff;font-family:inherit;font-weight:600;font-size:0.85rem;cursor:pointer;color:#5B5B5B;">Abbrechen</button>
-      <button onclick="doPrint()" style="flex:2;padding:10px;border:none;border-radius:6px;background:#2A9D8F;color:#fff;font-family:inherit;font-weight:700;font-size:0.85rem;cursor:pointer;">Verstanden – Drucken starten</button>
-    </div>
+<!-- =============== PDF EXPORT MODAL =============== -->
+<div id="pdf-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;padding:32px 36px;max-width:360px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:inherit;text-align:center;">
+    <div id="pdf-spinner" style="font-size:2.5rem;margin-bottom:12px;">⏳</div>
+    <div id="pdf-status" style="font-size:1rem;font-weight:700;color:#0F3D56;margin-bottom:6px;">PDF wird erstellt…</div>
+    <div id="pdf-sub" style="font-size:0.8rem;color:#5B5B5B;">Bitte warten</div>
   </div>
 </div>
 
@@ -1055,22 +932,83 @@ const WOCHENENDE_PCT = 0.12;
 const MIN_AUFTRAG = 590;
 const MWST = 0.19;
 
-// =============== PRINT TRIGGER ===============
-function showPrintHint(){
-  const m = document.getElementById('print-modal');
-  m.style.display = 'flex';
-}
-function closePrintHint(){
-  document.getElementById('print-modal').style.display = 'none';
-}
-function doPrint(){
-  closePrintHint();
-  const origTitle = document.title;
-  document.title = ' ';
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => { document.title = origTitle; }, 500);
-  }, 80);
+// =============== PDF EXPORT ===============
+async function exportPDF(){
+  const modal = document.getElementById('pdf-modal');
+  const status = document.getElementById('pdf-status');
+  const sub = document.getElementById('pdf-sub');
+  const spinner = document.getElementById('pdf-spinner');
+  modal.style.display = 'flex';
+
+  // Dynamisch laden falls noch nicht vorhanden
+  async function loadScript(src){
+    return new Promise((res, rej) => {
+      if (document.querySelector(`script[src="${src}"]`)) return res();
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = res;
+      s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  try {
+    status.textContent = 'Bibliotheken laden…';
+    sub.textContent = 'html2canvas & jsPDF';
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+
+    const pages = document.querySelectorAll('.a4-page');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+
+    const A4_W = 210;
+    const A4_H = 297;
+
+    for (let i = 0; i < pages.length; i++){
+      status.textContent = `Seite ${i+1} von ${pages.length} wird gerendert…`;
+      sub.textContent = 'Bitte warten';
+      spinner.textContent = i % 2 === 0 ? '⏳' : '🔄';
+
+      const page = pages[i];
+      const canvas = await html2canvas(page, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: page.offsetWidth,
+        height: page.offsetHeight,
+        windowWidth: page.offsetWidth,
+        logging: false
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.97);
+
+      // Seitenverhältnis berechnen
+      const canvasW = canvas.width;
+      const canvasH = canvas.height;
+      const ratio = canvasH / canvasW;
+      const imgH = A4_W * ratio;
+
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, 0, A4_W, imgH);
+    }
+
+    status.textContent = 'PDF wird gespeichert…';
+    spinner.textContent = '💾';
+
+    const offerId = document.getElementById('meta-offer-id').value || 'Angebot';
+    pdf.save(`${offerId}_HeinzelMaenner.pdf`);
+
+    modal.style.display = 'none';
+    flash('PDF gespeichert ✓');
+
+  } catch(err) {
+    spinner.textContent = '❌';
+    status.textContent = 'Fehler beim Erstellen';
+    sub.textContent = err.message || 'Bitte Seite neu laden und erneut versuchen';
+    setTimeout(() => { modal.style.display = 'none'; }, 3000);
+  }
 }
 
 // =============== INIT ===============
