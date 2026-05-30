@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeinzelMänner · Angebot kalkulieren</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+  --navy:#0F3D56;
+  --navy-dark:#082638;
+  --accent:#F77F00;
+  --accent-dark:#D96E00;
+  --accent-soft:#FFF1DF;
+  --cream:#FAF7F2;
+  --warm-grey:#E9E3D9;
+  --text:#1A1A1A;
+  --text-muted:#5B5B5B;
+  --border:#DCD5C8;
+  --success:#2A9D8F;
+  --danger:#C0392B;
+  --radius:10px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:linear-gradient(135deg,#94a3b1 0%,#7d8a96 100%);
+  color:var(--text);
+  height:100vh;
+  display:flex;
+  overflow:hidden;
+}
+
+@page{
+  size:A4 portrait;
+  margin:0;
+}
+
+/* =============== EDITOR PANEL =============== */
+.editor-panel{
+  width:460px;
+  background:#fff;
+  padding:0;
+  box-shadow:2px 0 18px rgba(0,0,0,0.18);
+  overflow-y:auto;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
+.editor-head{
+  position:sticky;
+  top:0;
+  background:var(--navy);
+  color:#fff;
+  padding:18px 22px;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border-bottom:3px solid var(--accent);
+}
+.editor-head .logo-svg{width:38px;height:38px;flex-shrink:0}
+.editor-head h1{font-size:1rem;font-weight:800;letter-spacing:-0.01em}
+.editor-head .sub{font-size:0.7rem;color:#C9D2D8;text-transform:uppercase;letter-spacing:0.08em;margin-top:2px}
+.editor-head .back{
+  margin-left:auto;
+  color:#fff;
+  font-size:0.78rem;
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,0.35);
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:600;
+}
+.editor-head .back:hover{background:rgba(255,255,255,0.1)}
+
+.editor-body{padding:18px 22px 28px}
+
+.section-title{
+  color:var(--navy);
+  font-size:0.78rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  margin:24px 0 10px;
+  padding-bottom:6px;
+  border-bottom:2px solid var(--accent);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.section-title:first-child{margin-top:6px}
+.section-title .num{
+  background:var(--accent);
+  color:#fff;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.72rem;
+  font-weight:800;
+}
+
+.section-box{
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  margin-bottom:12px;
+}
+
+.field{margin-bottom:11px}
+.field:last-child{margin-bottom:0}
+.field label{
+  display:block;
+  font-size:0.68rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:var(--text-muted);
+  margin-bottom:5px;
+}
+.field input[type=text],
+.field input[type=number],
+.field input[type=date],
+.field textarea,
+.field select{
+  width:100%;
+  padding:9px 11px;
+  border:1.5px solid var(--border);
+  border-radius:6px;
+  font-family:inherit;
+  font-size:0.86rem;
+  background:#fff;
+  color:var(--text);
+  transition:border-color 0.15s,box-shadow 0.15s;
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(247,127,0,0.15);
+}
+.field textarea{resize:vertical;min-height:80px;line-height:1.45;font-size:0.84rem}
+.field .hint{font-size:0.7rem;color:var(--text-muted);margin-top:4px;font-style:italic}
+
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+.checkbox{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:0.85rem;
+  font-weight:600;
+  color:var(--navy);
+  cursor:pointer;
+  margin-bottom:8px;
+}
+.checkbox input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+
+.calc-summary{
+  background:var(--navy);
+  color:#fff;
+  border-radius:var(--radius);
+  padding:14px 18px;
+  margin-top:8px;
+}
+.calc-summary .label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:#9DB6C5;font-weight:600}
+.calc-summary .val{font-size:1.6rem;font-weight:900;letter-spacing:-0.02em;margin-top:2px}
+.calc-summary .breakdown{font-size:0.78rem;color:#C9D2D8;margin-top:6px;line-height:1.4}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:10px 14px;
+  border:none;
+  border-radius:6px;
+  font-family:inherit;
+  font-weight:700;
+  font-size:0.85rem;
+  cursor:pointer;
+  transition:opacity 0.15s,transform 0.15s,background 0.15s;
+  color:#fff;
+  width:100%;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-add{background:var(--navy)}
+.btn-add:hover{background:var(--navy-dark)}
+.btn-save{background:var(--accent);margin-top:18px;font-size:0.95rem;padding:13px}
+.btn-save:hover{background:var(--accent-dark)}
+.btn-print{background:var(--success);margin-top:8px;font-size:0.95rem;padding:13px}
+.btn-print:hover{background:#208077}
+.btn-mini-ghost{
+  background:transparent;
+  color:var(--danger);
+  border:1px solid var(--danger);
+  padding:5px 9px;
+  font-size:0.72rem;
+  border-radius:4px;
+  cursor:pointer;
+  font-weight:700;
+}
+.btn-mini-ghost:hover{background:#FDECEA}
+
+.positions-list{margin-bottom:10px}
+.position-item{
+  display:grid;
+  grid-template-columns:1fr 90px 30px;
+  gap:8px;
+  align-items:center;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:8px 10px;
+  margin-bottom:6px;
+  font-size:0.82rem;
+}
+.position-item .desc{font-weight:600;color:var(--navy);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.position-item .amt{text-align:right;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.position-item .del-x{
+  color:var(--danger);
+  cursor:pointer;
+  font-weight:bold;
+  font-size:1.05rem;
+  text-align:center;
+  user-select:none;
+}
+.position-item .del-x:hover{color:#7E1A0E}
+
+/* =============== PREVIEW PANEL =============== */
+.preview-panel{
+  flex-grow:1;
+  padding:32px 24px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px;
+}
+.a4-page{
+  width:210mm;
+  min-height:297mm;
+  background:#fff;
+  padding:14mm 14mm 22mm;
+  box-shadow:0 0 22px rgba(0,0,0,0.4);
+  box-sizing:border-box;
+  position:relative;
+  display:block;
+  page-break-after:always;
+  flex-shrink:0;
+  font-size:10pt;
+  line-height:1.45;
+  color:#1A1A1A;
+}
+
+/* Print logo top right */
+.print-logo{
+  position:absolute;
+  top:14mm;
+  right:14mm;
+  width:30mm;
+  height:30mm;
+}
+
+/* Sender mini-line */
+.sender-line{
+  font-size:7pt;
+  color:#5B5B5B;
+  border-bottom:0.5px solid #5B5B5B;
+  padding-bottom:1mm;
+  margin-bottom:5mm;
+  letter-spacing:0.02em;
+  width:90mm;
+}
+
+/* Empfänger box */
+.address-box{
+  font-size:11pt;
+  line-height:1.5;
+  margin-bottom:14mm;
+  min-height:30mm;
+  white-space:pre-line;
+}
+
+/* Document meta (offer no, date) */
+.meta-table{
+  width:75mm;
+  font-size:9pt;
+  margin-left:auto;
+  margin-bottom:8mm;
+  margin-top:-30mm;
+  border-collapse:collapse;
+}
+.meta-table td{padding:1mm 0}
+.meta-table td:first-child{color:#5B5B5B;width:30mm}
+.meta-table td:last-child{font-weight:700;color:#0F3D56}
+
+.doc-title{
+  font-size:18pt;
+  font-weight:900;
+  color:#0F3D56;
+  margin-bottom:4mm;
+  letter-spacing:-0.01em;
+}
+.doc-subtitle{
+  font-size:10pt;
+  color:#F77F00;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-bottom:6mm;
+}
+
+.intro-text{
+  font-size:10pt;
+  line-height:1.6;
+  white-space:pre-wrap;
+  margin-bottom:8mm;
+}
+
+/* Object summary */
+.object-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:0;
+  border:1px solid #DCD5C8;
+  border-radius:4px;
+  margin-bottom:6mm;
+  overflow:hidden;
+  font-size:9pt;
+}
+.object-grid > div{
+  padding:3mm 4mm;
+  border-right:1px solid #DCD5C8;
+  border-bottom:1px solid #DCD5C8;
+}
+.object-grid > div:nth-child(3n){border-right:none}
+.object-grid > div:nth-last-child(-n+3){border-bottom:none}
+.object-grid .lbl{
+  font-size:7pt;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:#5B5B5B;
+  font-weight:700;
+}
+.object-grid .val{font-weight:700;color:#0F3D56;font-size:10pt;margin-top:1mm}
+
+/* Calculation table */
+.calc-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:5mm;
+  font-size:9.5pt;
+}
+.calc-table th{
+  background:#0F3D56;
+  color:#fff;
+  font-weight:700;
+  text-align:left;
+  padding:3mm 4mm;
+  font-size:8.5pt;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+}
+.calc-table th:last-child{text-align:right}
+.calc-table td{
+  padding:2.6mm 4mm;
+  border-bottom:0.5px solid #DCD5C8;
+  vertical-align:top;
+}
+.calc-table td:last-child{
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+  font-weight:600;
+}
+.calc-table .pos-title{font-weight:700;color:#0F3D56}
+.calc-table .pos-desc{font-size:8pt;color:#5B5B5B;margin-top:0.5mm}
+.calc-table tr.subtotal td{
+  border-top:1px solid #0F3D56;
+  border-bottom:none;
+  padding-top:3mm;
+  font-weight:700;
+}
+.calc-table tr.discount td{color:#2A9D8F}
+.calc-table tr.surcharge td{color:#D96E00}
+
+/* Big total box */
+.total-box{
+  background:#0F3D56;
+  color:#fff;
+  border-radius:6px;
+  padding:5mm 6mm;
+  margin:4mm 0 6mm;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.total-box .label{font-size:9pt;text-transform:uppercase;letter-spacing:0.08em;color:#9DB6C5;font-weight:600}
+.total-box .price{font-size:22pt;font-weight:900;letter-spacing:-0.02em;color:#fff}
+.total-box .price small{font-size:10pt;font-weight:600;color:#9DB6C5;margin-left:5mm}
+.total-box .badge{
+  background:#F77F00;
+  color:#fff;
+  padding:2mm 4mm;
+  border-radius:999px;
+  font-size:8pt;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  display:inline-block;
+  margin-bottom:1mm;
+}
+
+.tax-table{
+  width:60mm;
+  margin-left:auto;
+  font-size:8.5pt;
+  border-collapse:collapse;
+  margin-top:-3mm;
+  margin-bottom:6mm;
+}
+.tax-table td{padding:1mm 0}
+.tax-table td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+
+/* Inkludierte Leistungen */
+.included{
+  background:#FFF1DF;
+  border-left:3px solid #F77F00;
+  border-radius:0 4px 4px 0;
+  padding:4mm 5mm;
+  margin-bottom:6mm;
+}
+.included h3{
+  font-size:9pt;
+  color:#0F3D56;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  margin-bottom:2mm;
+}
+.included ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:1mm 4mm;font-size:8.5pt}
+.included li{padding-left:5mm;position:relative;line-height:1.4}
+.included li::before{
+  content:"✓";
+  position:absolute;
+  left:0;
+  color:#2A9D8F;
+  font-weight:bold;
+}
+
+/* Zahlung */
+.zahlung{
+  font-size:8.5pt;
+  color:#5B5B5B;
+  line-height:1.5;
+  margin-bottom:6mm;
+  white-space:pre-wrap;
+}
+
+/* Footer */
+.doc-footer{
+  position:absolute;
+  bottom:6mm;
+  left:14mm;
+  right:14mm;
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:6mm;
+  font-size:6.5pt;
+  color:#5B5B5B;
+  border-top:0.5px solid #DCD5C8;
+  padding-top:2mm;
+  line-height:1.5;
+}
+.doc-footer strong{color:#0F3D56;display:block;margin-bottom:0.5mm;font-weight:700}
+
+.signature-row{
+  display:none;
+  grid-template-columns:1fr 1fr;
+  gap:10mm;
+  margin-top:10mm;
+  margin-bottom:8mm;
+  font-size:8pt;
+  color:#5B5B5B;
+}
+.show-signature .signature-row{display:grid}
+.signature-row .sig{border-top:1px solid #1A1A1A;padding-top:1mm}
+
+/* =============== PRINT =============== */
+
+@media (max-width: 1100px){
+  body{flex-direction:column;height:auto;overflow:auto}
+  .editor-panel{width:100%;max-height:none}
+  .preview-panel{padding:20px}
+  .a4-page{transform-origin:top center}
+}
+</style>
+</head>
+<body>
+
+<!-- =============== EDITOR =============== -->
+<aside class="editor-panel">
+  <div class="editor-head">
+    <img class="logo-svg" src="HM Logo.svg" alt="HeinzelMänner Logo">
+    <div>
+      <h1>Angebot kalkulieren</h1>
+      <div class="sub" id="hdr-offer-id">AG-···-2026</div>
+    </div>
+    <a href="index.html" class="back" title="Zurück zur Startseite">← Übersicht</a>
+  </div>
+
+  <div class="editor-body">
+
+    <!-- 0. Angebot & Empfänger -->
+    <div class="section-title"><span class="num">0</span> Angebot &amp; Empfänger</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Empfänger / Anschrift</label>
+        <textarea id="meta-recipient" rows="4" placeholder="Frau Maria Mustermann&#10;Hauptstraße 12&#10;69115 Heidelberg"></textarea>
+      </div>
+      <div class="field">
+        <label>Anlass / Bezeichnung</label>
+        <input type="text" id="meta-event" placeholder="z. B. Wohnungsauflösung Nachlass">
+      </div>
+      <div class="field">
+        <label>Objekt-Adresse</label>
+        <input type="text" id="meta-location" placeholder="Hauptstraße 12, 69115 Heidelberg">
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>Wunschtermin</label>
+          <input type="date" id="meta-date">
+        </div>
+        <div class="field">
+          <label>Reserviert bis</label>
+          <input type="date" id="meta-valid-until">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>Angebotsnummer</label>
+          <input type="text" id="meta-offer-id">
+        </div>
+        <div class="field">
+          <label>Sachbearbeiter</label>
+          <input type="text" id="meta-clerk" placeholder="z. B. Sascha Heck">
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Anschreiben -->
+    <div class="section-title"><span class="num">1</span> Anschreiben</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Anrede</label>
+        <input type="text" id="inp-greeting" value="Sehr geehrte Damen und Herren,">
+      </div>
+      <div class="field">
+        <label>Einleitungstext</label>
+        <textarea id="inp-intro">vielen Dank für Ihre Anfrage und Ihr Vertrauen.
+
+Anbei erhalten Sie unser unverbindliches Festpreisangebot für die im Folgenden beschriebene Entrümpelung. Der genannte Preis ist ein verbindlicher Festpreis und wird nicht überschritten – es entstehen keine versteckten Zusatzkosten.
+
+Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit gerne zur Verfügung.</textarea>
+      </div>
+    </div>
+
+    <!-- 2. Objekt -->
+    <div class="section-title"><span class="num">2</span> Objekt</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Objekttyp</label>
+        <select id="obj-type">
+          <option value="1zi"  data-factor="0.35">1-Zimmer-Wohnung</option>
+          <option value="2zi"  data-factor="0.36">2-Zimmer-Wohnung</option>
+          <option value="3zi"  data-factor="0.38" selected>3-Zimmer-Wohnung</option>
+          <option value="4zi"  data-factor="0.40">4-Zimmer-Wohnung</option>
+          <option value="5zi"  data-factor="0.42">5+ Zimmer / Maisonette</option>
+          <option value="efh"  data-factor="0.45">Einfamilienhaus</option>
+          <option value="mfh"  data-factor="0.48">Mehrfamilienhaus</option>
+          <option value="kel"  data-factor="0.60">Nur Keller</option>
+          <option value="dach" data-factor="0.55">Nur Dachboden</option>
+          <option value="gar"  data-factor="0.50">Nur Garage</option>
+          <option value="gew"  data-factor="0.32">Gewerbe / Büro / Lager</option>
+          <option value="sonst" data-factor="0.40">Sonstiges</option>
+        </select>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>Wohnfläche (m²)</label>
+          <input type="number" id="obj-qm" min="0" step="1" value="75" placeholder="z. B. 75">
+          <div class="hint" id="obj-qm-hint">→ ca. <span id="obj-qm-out">29</span> m³ Räumvolumen</div>
+        </div>
+        <div class="field">
+          <label>Möblierungsgrad</label>
+          <select id="obj-furnish">
+            <option value="0.6">Leicht (× 0,6)</option>
+            <option value="1.0" selected>Normal (× 1,0)</option>
+            <option value="1.4">Voll (× 1,4)</option>
+            <option value="1.85">Messi / Sammler (× 1,85)</option>
+          </select>
+        </div>
+      </div>
+      <label class="checkbox"><input type="checkbox" id="obj-add-keller"> + Keller (+4 m³)</label>
+      <label class="checkbox"><input type="checkbox" id="obj-add-dach"> + Dachboden (+5 m³)</label>
+      <label class="checkbox"><input type="checkbox" id="obj-add-garage"> + Garage (+6 m³)</label>
+      <div class="field">
+        <label>Volumen manuell überschreiben (m³, optional)</label>
+        <input type="number" id="obj-volume-override" placeholder="leer = automatisch" min="0" step="0.5">
+        <div class="hint">Überschreibt die m²-Berechnung komplett</div>
+      </div>
+    </div>
+
+    <!-- 3. Logistik -->
+    <div class="section-title"><span class="num">3</span> Logistik</div>
+    <div class="section-box">
+      <div class="row-2">
+        <div class="field">
+          <label>Etage</label>
+          <select id="log-etage">
+            <option value="0" selected>Erdgeschoss</option>
+            <option value="1">1. OG</option>
+            <option value="2">2. OG</option>
+            <option value="3">3. OG</option>
+            <option value="4">4. OG oder höher</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Aufzug?</label>
+          <select id="log-aufzug">
+            <option value="no" selected>Nein</option>
+            <option value="yes">Ja</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>Anfahrt von Leimen (km)</label>
+          <input type="number" id="log-km" min="0" step="1" value="0">
+          <div class="hint">Erste 15 km im Festpreis enthalten</div>
+        </div>
+        <div class="field">
+          <label>Tragweg Container ↔ Wohnung (m)</label>
+          <input type="number" id="log-tragweg" min="0" step="1" value="15">
+          <div class="hint">Bis 25 m im Festpreis</div>
+        </div>
+      </div>
+      <label class="checkbox"><input type="checkbox" id="log-halteverbot"> Halteverbotszone einrichten (+95 €)</label>
+    </div>
+
+    <!-- 4. Sondersituationen -->
+    <div class="section-title"><span class="num">4</span> Inhalte &amp; Sondersituationen</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Schutzausrüstung / Hygienemaßnahmen</label>
+        <select id="son-psa">
+          <option value="0" selected>Nein, nicht erforderlich</option>
+          <option value="90">Standard-PSA (FFP3, Handschuhe, Anzug) +90 €</option>
+          <option value="380">Erweitert (Vollschutz, Desinfektion, Sonderentsorgung) +380 €</option>
+        </select>
+        <div class="hint">Standard z. B. bei Messi · Erweitert z. B. bei Verwesungs- / Verwahrlosungsfällen</div>
+      </div>
+      <div class="field">
+        <label>Elektroschrott-Menge</label>
+        <select id="son-elektro">
+          <option value="0" selected>Keine / gering (im Preis)</option>
+          <option value="60">Mittel (4–10 Geräte) +60 €</option>
+          <option value="140">Viel (Weiße Ware, &gt;10 Geräte) +140 €</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sondermüll-Pauschale (€)</label>
+        <input type="number" id="son-sondermuell" min="0" step="10" value="0">
+        <div class="hint">z. B. Asbest, Öl, Lacke, Chemikalien</div>
+      </div>
+      <div class="field">
+        <label>Kleinrenovierung Wandanstrich (m²)</label>
+        <input type="number" id="son-renov" min="0" step="1" value="0">
+        <div class="hint">12 €/m² inkl. Material</div>
+      </div>
+    </div>
+
+    <!-- 5. Termin & Konditionen -->
+    <div class="section-title"><span class="num">5</span> Termin &amp; Konditionen</div>
+    <div class="section-box">
+      <label class="checkbox"><input type="checkbox" id="kon-eilfall"> Eilfall &lt; 48 Stunden (+20 %)</label>
+      <label class="checkbox"><input type="checkbox" id="kon-wochenende"> Wochenende / Feiertag (+12 %)</label>
+      <div class="field" style="margin-top:8px">
+        <label>Wertanrechnung (verwertbare Möbel etc.) − €</label>
+        <input type="number" id="kon-wertanrechnung" min="0" step="10" value="0">
+        <div class="hint">Wird vom Festpreis abgezogen</div>
+      </div>
+    </div>
+
+    <!-- 6. Eigene Positionen -->
+    <div class="section-title"><span class="num">6</span> Eigene Positionen</div>
+    <div class="section-box">
+      <div class="positions-list" id="positions-list"></div>
+      <div class="row-2">
+        <div class="field" style="margin-bottom:6px">
+          <label>Beschreibung</label>
+          <input type="text" id="pos-desc" placeholder="z. B. Demontage Einbauküche">
+        </div>
+        <div class="field" style="margin-bottom:6px">
+          <label>Betrag €</label>
+          <input type="number" id="pos-amt" step="0.01" placeholder="z. B. 280">
+        </div>
+      </div>
+      <button class="btn btn-add" onclick="addPosition()">+ Position hinzufügen</button>
+    </div>
+
+    <!-- 7. Zahlungsbedingungen & Darstellung -->
+    <div class="section-title"><span class="num">7</span> Zahlung &amp; Darstellung</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Text Zahlungsbedingungen</label>
+        <textarea id="inp-zahlung">Der Festpreis ist nach erfolgter Räumung und besenreiner Übergabe in bar oder per Überweisung innerhalb 7 Tagen ohne Abzug fällig. Bei Aufträgen ab 1.500 € netto behalten wir uns eine Anzahlung in Höhe von 30 % bei Auftragsannahme vor. Es gelten unsere AGB.</textarea>
+      </div>
+      <label class="checkbox"><input type="checkbox" id="opt-signature"> Unterschriftsfelder im Angebot anzeigen</label>
+      <div class="hint" style="margin-left:24px;margin-top:-2px">Nur einschalten, wenn das Angebot vor Ort unterschrieben werden soll. Bei E-Mail-Versand nicht nötig.</div>
+    </div>
+
+    <!-- LIVE TOTAL -->
+    <div class="calc-summary">
+      <div class="label">Festpreis brutto</div>
+      <div class="val" id="live-total">0,00 €</div>
+      <div class="breakdown" id="live-breakdown">netto · zzgl. MwSt</div>
+    </div>
+
+    <button class="btn btn-save" onclick="saveDraft()">💾 Als Entwurf speichern</button>
+    <button class="btn btn-print" onclick="exportPDF()">📄 Als PDF exportieren</button>
+  </div>
+</aside>
+
+<!-- =============== PDF EXPORT MODAL =============== -->
+<div id="pdf-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;padding:32px 36px;max-width:360px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:inherit;text-align:center;">
+    <div id="pdf-spinner" style="font-size:2.5rem;margin-bottom:12px;">⏳</div>
+    <div id="pdf-status" style="font-size:1rem;font-weight:700;color:#0F3D56;margin-bottom:6px;">PDF wird erstellt…</div>
+    <div id="pdf-sub" style="font-size:0.8rem;color:#5B5B5B;">Bitte warten</div>
+  </div>
+</div>
+
+<!-- =============== PREVIEW =============== -->
+<main class="preview-panel">
+
+  <!-- SEITE 1: Anschreiben -->
+  <article class="a4-page" id="page1">
+
+    <!-- Logo top right -->
+    <img class="print-logo" src="HM Logo.svg" alt="HeinzelMänner Logo">
+
+    <!-- Sender mini-line -->
+    <div class="sender-line">HeinzelMänner GmbH · Im Hagen 4 · 69181 Leimen</div>
+
+    <!-- Empfänger -->
+    <div class="address-box" id="prev-recipient"></div>
+
+    <!-- Meta -->
+    <table class="meta-table">
+      <tr><td>Angebot Nr.</td><td id="prev-offer-id">–</td></tr>
+      <tr><td>Datum</td><td id="prev-date-today">–</td></tr>
+      <tr><td>Wunschtermin</td><td id="prev-date">–</td></tr>
+      <tr><td>Reserviert bis</td><td id="prev-valid">–</td></tr>
+      <tr><td>Sachbearbeiter</td><td id="prev-clerk">–</td></tr>
+    </table>
+
+    <h1 class="doc-title" id="prev-event">Angebot Entrümpelung</h1>
+    <div class="doc-subtitle">Festpreisangebot · Entrümpelung &amp; Besenreinreinigung</div>
+
+    <p style="font-size:10pt;margin-bottom:3mm;font-weight:600" id="prev-greeting">Sehr geehrte Damen und Herren,</p>
+    <div class="intro-text" id="prev-intro"></div>
+
+    <!-- Footer Seite 1 -->
+    <div class="doc-footer">
+      <div>
+        <strong>HeinzelMänner GmbH</strong>
+        Hausmeister Dienste und<br>Gebäude Service<br>
+        Im Hagen 4<br>69181 Leimen
+      </div>
+      <div>
+        <strong>Kontakt</strong>
+        Tel.: 06224 / 925 67 00<br>
+        Mobil: 0162 6151832<br>
+        info@hm-sanierung.com
+      </div>
+      <div>
+        <strong>Geschäftsführer</strong>
+        Sascha Heck<br>
+        USt-IdNr.<br>DE 192 272 349
+      </div>
+    </div>
+
+  </article>
+
+  <!-- SEITE 2+: Angebot / Kalkulation -->
+  <article class="a4-page" id="page2">
+
+    <!-- Logo top right -->
+    <img class="print-logo" src="HM Logo.svg" alt="HeinzelMänner Logo">
+
+    <!-- Object summary -->
+    <div class="object-grid">
+      <div><div class="lbl">Objekttyp</div><div class="val" id="prev-obj-type">3-Zimmer-Wohnung</div></div>
+      <div><div class="lbl">Adresse</div><div class="val" id="prev-obj-addr">–</div></div>
+      <div><div class="lbl">Etage</div><div class="val" id="prev-obj-etage">EG</div></div>
+      <div><div class="lbl">Wohnfläche</div><div class="val" id="prev-obj-qm">75 m²</div></div>
+      <div><div class="lbl">Räumvolumen</div><div class="val" id="prev-obj-vol">29 m³</div></div>
+      <div><div class="lbl">Möblierung</div><div class="val" id="prev-obj-furnish">Normal</div></div>
+    </div>
+
+    <!-- Calculation -->
+    <table class="calc-table">
+      <thead>
+        <tr><th>Position</th><th>Betrag (netto)</th></tr>
+      </thead>
+      <tbody id="prev-calc-tbody"></tbody>
+    </table>
+
+    <!-- Tax breakdown -->
+    <table class="tax-table">
+      <tr><td>Zwischensumme netto</td><td id="prev-netto">0,00 €</td></tr>
+      <tr><td>zzgl. 19 % MwSt.</td><td id="prev-mwst">0,00 €</td></tr>
+    </table>
+
+    <!-- Total Box -->
+    <div class="total-box">
+      <div>
+        <span class="badge">Festpreis garantiert</span>
+        <div class="label">Gesamtbetrag brutto</div>
+      </div>
+      <div class="price" id="prev-total">0,00 €</div>
+    </div>
+
+    <!-- Inkludierte Leistungen -->
+    <div class="included">
+      <h3>Im Festpreis enthalten</h3>
+      <ul>
+        <li>Vollständiges Ausräumen aller vereinbarten Räume</li>
+        <li>Sortenreine, fachgerechte Entsorgung</li>
+        <li>Besenreine Übergabe der Flächen</li>
+        <li>An- und Abfahrt im 15-km-Radius</li>
+        <li>Komplettes Räumteam &amp; Container</li>
+        <li>Entsorgungsnachweise auf Wunsch</li>
+        <li>Vollumfänglicher Versicherungsschutz</li>
+        <li>Schriftlicher Festpreis – keine Nachforderungen</li>
+      </ul>
+    </div>
+
+    <!-- Zahlungsbedingungen -->
+    <div class="zahlung" id="prev-zahlung"></div>
+
+    <!-- Signature -->
+    <div class="signature-row">
+      <div class="sig">Ort, Datum</div>
+      <div class="sig">Unterschrift Auftraggeber</div>
+    </div>
+
+    <!-- Footer Seite 2+ -->
+    <div class="doc-footer">
+      <div>
+        <strong>HeinzelMänner GmbH</strong>
+        Hausmeister Dienste und<br>Gebäude Service<br>
+        Im Hagen 4<br>69181 Leimen
+      </div>
+      <div>
+        <strong>Kontakt</strong>
+        Tel.: 06224 / 925 67 00<br>
+        Mobil: 0162 6151832<br>
+        info@hm-sanierung.com
+      </div>
+      <div>
+        <strong>Geschäftsführer</strong>
+        Sascha Heck<br>
+        USt-IdNr.<br>DE 192 272 349
+      </div>
+    </div>
+
+  </article>
+</main>
+
+<script>
+'use strict';
+
+// =============== STATE ===============
+const STORAGE = {
+  drafts: 'hm_angebot_drafts',
+  lastId: 'hm_angebot_last_id'
+};
+
+const state = {
+  positions: [],
+  meta: {},
+  draftIndex: null
+};
+
+const TYPE_LABELS = {
+  '1zi':'1-Zimmer-Wohnung','2zi':'2-Zimmer-Wohnung','3zi':'3-Zimmer-Wohnung',
+  '4zi':'4-Zimmer-Wohnung','5zi':'5+ Zimmer / Maisonette','efh':'Einfamilienhaus',
+  'mfh':'Mehrfamilienhaus','kel':'Keller','dach':'Dachboden','gar':'Garage',
+  'gew':'Gewerbe / Büro / Lager','sonst':'Objekt nach Vereinbarung'
+};
+
+const FURNISH_LABELS = {
+  '0.6':'Leicht möbliert',
+  '1.0':'Normal möbliert',
+  '1.4':'Voll möbliert',
+  '1.85':'Messi / Sammler'
+};
+
+const ETAGE_LABELS = {0:'Erdgeschoss',1:'1. Obergeschoss',2:'2. Obergeschoss',3:'3. Obergeschoss',4:'4. OG oder höher'};
+const ETAGE_PCT = {0:0, 1:0.04, 2:0.08, 3:0.14, 4:0.20};
+
+const RATE_PER_M3 = 45;
+const ANFAHRT_INCL_KM = 15;
+const ANFAHRT_BASE = 30;
+const ANFAHRT_PER_KM = 1.20;
+const TRAGWEG_INCL = 25;
+const TRAGWEG_PER_M = 1.50;
+const HALTEVERBOT = 95;
+const RENOV_PER_M2 = 12;
+const EILFALL_PCT = 0.20;
+const WOCHENENDE_PCT = 0.12;
+const MIN_AUFTRAG = 590;
+const MWST = 0.19;
+
+// =============== PDF EXPORT ===============
+async function exportPDF(){
+  const modal = document.getElementById('pdf-modal');
+  const status = document.getElementById('pdf-status');
+  const sub = document.getElementById('pdf-sub');
+  const spinner = document.getElementById('pdf-spinner');
+  modal.style.display = 'flex';
+
+  // Dynamisch laden falls noch nicht vorhanden
+  async function loadScript(src){
+    return new Promise((res, rej) => {
+      if (document.querySelector(`script[src="${src}"]`)) return res();
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = res;
+      s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  try {
+    status.textContent = 'Bibliotheken laden…';
+    sub.textContent = 'html2canvas & jsPDF';
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+
+    const pages = document.querySelectorAll('.a4-page');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+
+    const A4_W = 210;
+    const A4_H = 297;
+
+    for (let i = 0; i < pages.length; i++){
+      status.textContent = `Seite ${i+1} von ${pages.length} wird gerendert…`;
+      sub.textContent = 'Bitte warten';
+      spinner.textContent = i % 2 === 0 ? '⏳' : '🔄';
+
+      const page = pages[i];
+      const canvas = await html2canvas(page, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: page.offsetWidth,
+        height: page.offsetHeight,
+        windowWidth: page.offsetWidth,
+        logging: false
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.97);
+
+      // Seitenverhältnis berechnen
+      const canvasW = canvas.width;
+      const canvasH = canvas.height;
+      const ratio = canvasH / canvasW;
+      const imgH = A4_W * ratio;
+
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, 0, A4_W, imgH);
+    }
+
+    status.textContent = 'PDF wird gespeichert…';
+    spinner.textContent = '💾';
+
+    const offerId = document.getElementById('meta-offer-id').value || 'Angebot';
+    pdf.save(`${offerId}_HeinzelMaenner.pdf`);
+
+    modal.style.display = 'none';
+    flash('PDF gespeichert ✓');
+
+  } catch(err) {
+    spinner.textContent = '❌';
+    status.textContent = 'Fehler beim Erstellen';
+    sub.textContent = err.message || 'Bitte Seite neu laden und erneut versuchen';
+    setTimeout(() => { modal.style.display = 'none'; }, 3000);
+  }
+}
+
+// =============== INIT ===============
+function init(){
+  const params = new URLSearchParams(window.location.search);
+
+  let recipient = '';
+  if (params.has('recipient')){
+    try { recipient = decodeURIComponent(escape(atob(params.get('recipient')))); }
+    catch(e){ recipient = params.get('recipient'); }
+  }
+  setVal('meta-recipient', recipient);
+  setVal('meta-event',      params.get('event') || '');
+  setVal('meta-location',   params.get('location') || '');
+  setVal('meta-date',       params.get('date') || '');
+  setVal('meta-valid-until',params.get('validUntil') || '');
+  setVal('meta-offer-id',   params.get('offerId') || autoOfferId());
+  setVal('meta-clerk',      params.get('clerk') || '');
+
+  if (params.has('draftIndex')){
+    state.draftIndex = parseInt(params.get('draftIndex'), 10);
+    const drafts = getDrafts();
+    const d = drafts[state.draftIndex];
+    if (d) restoreFromDraft(d);
+  }
+
+  document.querySelectorAll('input,select,textarea').forEach(el => {
+    el.addEventListener('input', render);
+    el.addEventListener('change', render);
+  });
+
+  render();
+}
+
+function setVal(id, v){
+  const el = document.getElementById(id);
+  if (el && v != null && v !== '') el.value = v;
+}
+
+function autoOfferId(){
+  const last = parseInt(localStorage.getItem(STORAGE.lastId) || '100', 10) + 1;
+  localStorage.setItem(STORAGE.lastId, String(last));
+  return 'AG-' + String(last).padStart(3, '0') + '-' + new Date().getFullYear();
+}
+
+function restoreFromDraft(d){
+  if (d.fields){
+    Object.keys(d.fields).forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === 'checkbox') el.checked = !!d.fields[id];
+      else el.value = d.fields[id];
+    });
+  }
+  if (Array.isArray(d.positions)) state.positions = d.positions.slice();
+  renderPositionsList();
+}
+
+function getDrafts(){
+  try { return JSON.parse(localStorage.getItem(STORAGE.drafts) || '[]'); }
+  catch(e){ return []; }
+}
+function saveDrafts(arr){ localStorage.setItem(STORAGE.drafts, JSON.stringify(arr)); }
+
+// =============== POSITIONS ===============
+function addPosition(){
+  const desc = document.getElementById('pos-desc').value.trim();
+  const amt  = parseFloat(document.getElementById('pos-amt').value);
+  if (!desc || isNaN(amt)){
+    alert('Bitte Beschreibung und Betrag angeben.');
+    return;
+  }
+  state.positions.push({desc, amt});
+  document.getElementById('pos-desc').value = '';
+  document.getElementById('pos-amt').value = '';
+  renderPositionsList();
+  render();
+}
+
+function removePosition(i){
+  state.positions.splice(i, 1);
+  renderPositionsList();
+  render();
+}
+
+function renderPositionsList(){
+  const list = document.getElementById('positions-list');
+  if (state.positions.length === 0){
+    list.innerHTML = '<div style="font-size:0.78rem;color:#999;font-style:italic;text-align:center;padding:8px">Noch keine eigenen Positionen</div>';
+    return;
+  }
+  list.innerHTML = state.positions.map((p, i) => `
+    <div class="position-item">
+      <div class="desc" title="${escapeHtml(p.desc)}">${escapeHtml(p.desc)}</div>
+      <div class="amt">${fmt(p.amt)}</div>
+      <div class="del-x" onclick="removePosition(${i})" title="Entfernen">×</div>
+    </div>
+  `).join('');
+}
+
+// =============== CALCULATION ===============
+function calcVolume(){
+  const sel = document.getElementById('obj-type');
+  const factor = parseFloat(sel.options[sel.selectedIndex].dataset.factor);
+  const qm = Math.max(0, parseFloat(document.getElementById('obj-qm').value) || 0);
+  const furnish = parseFloat(document.getElementById('obj-furnish').value);
+
+  let vol = qm * factor * furnish;
+  if (document.getElementById('obj-add-keller').checked)  vol += 4;
+  if (document.getElementById('obj-add-dach').checked)    vol += 5;
+  if (document.getElementById('obj-add-garage').checked)  vol += 6;
+
+  const override = parseFloat(document.getElementById('obj-volume-override').value);
+  if (!isNaN(override) && override > 0) vol = override;
+
+  const out = document.getElementById('obj-qm-out');
+  if (out) out.textContent = Math.round(vol).toString();
+
+  return Math.round(vol * 10) / 10;
+}
+
+function calcLines(){
+  const lines = [];
+  const vol = calcVolume();
+  const objSel = document.getElementById('obj-type');
+  const objLabel = TYPE_LABELS[objSel.value] || 'Objekt';
+  const qm = Math.max(0, parseFloat(document.getElementById('obj-qm').value) || 0);
+
+  const basis = vol * RATE_PER_M3;
+  const qmTxt = qm > 0 ? `${qm} m² · ` : '';
+  lines.push({
+    title: 'Räumung & Entsorgung – Basis',
+    desc: `${objLabel} · ${qmTxt}${vol.toString().replace('.',',')} m³ × ${fmtNum(RATE_PER_M3)} €/m³`,
+    amt: basis,
+    type: 'base'
+  });
+
+  const etage = parseInt(document.getElementById('log-etage').value, 10);
+  const aufzug = document.getElementById('log-aufzug').value === 'yes';
+  let etageZ = 0;
+  if (!aufzug && ETAGE_PCT[etage] > 0){
+    etageZ = Math.round(basis * ETAGE_PCT[etage]);
+    lines.push({
+      title: `Etagen-Zuschlag ${etage}. OG (ohne Aufzug)`,
+      desc: `${(ETAGE_PCT[etage]*100).toFixed(0)} % auf Basis – Tragelast über Treppe`,
+      amt: etageZ,
+      type: 'surcharge'
+    });
+  }
+
+  const km = Math.max(0, parseFloat(document.getElementById('log-km').value) || 0);
+  let anfahrt = 0;
+  if (km > 0){
+    if (km <= ANFAHRT_INCL_KM){
+      anfahrt = ANFAHRT_BASE;
+      lines.push({title:'Anfahrt', desc:`Pauschale bis ${ANFAHRT_INCL_KM} km (${km} km ab Leimen)`, amt:anfahrt, type:'extra'});
+    } else {
+      anfahrt = ANFAHRT_BASE + (km - ANFAHRT_INCL_KM) * ANFAHRT_PER_KM;
+      lines.push({title:'Anfahrt', desc:`${ANFAHRT_BASE.toFixed(2)} € Pauschale + (${km}−${ANFAHRT_INCL_KM}) × ${ANFAHRT_PER_KM.toFixed(2).replace('.',',')} €/km`, amt:anfahrt, type:'extra'});
+    }
+  }
+
+  const tragweg = Math.max(0, parseFloat(document.getElementById('log-tragweg').value) || 0);
+  if (tragweg > TRAGWEG_INCL){
+    const trag = (tragweg - TRAGWEG_INCL) * TRAGWEG_PER_M;
+    lines.push({title:'Tragweg-Zuschlag', desc:`${tragweg} m, davon ${tragweg-TRAGWEG_INCL} m über Pauschale × ${TRAGWEG_PER_M.toFixed(2).replace('.',',')} €/m`, amt:trag, type:'surcharge'});
+  }
+
+  if (document.getElementById('log-halteverbot').checked){
+    lines.push({title:'Halteverbotszone', desc:'Antrag, Beschilderung &amp; Aufstellung', amt:HALTEVERBOT, type:'extra'});
+  }
+
+  const psa = parseFloat(document.getElementById('son-psa').value) || 0;
+  if (psa > 0){
+    const psaLabel = psa === 380
+      ? 'Erweitert: Vollschutz, Desinfektion, Sonderentsorgung der PSA'
+      : 'Standard: FFP3-Masken, Schutzanzüge, Handschuhe für gesamtes Team';
+    lines.push({title:'Schutzausrüstung & Hygienemaßnahmen', desc: psaLabel, amt:psa, type:'extra'});
+  }
+
+  const elektro = parseFloat(document.getElementById('son-elektro').value) || 0;
+  if (elektro > 0){
+    const sel = document.getElementById('son-elektro');
+    lines.push({title:'Elektroschrott-Pauschale', desc: sel.options[sel.selectedIndex].text.replace(/\+\d+ €/,'').trim(), amt:elektro, type:'extra'});
+  }
+
+  const sondermuell = parseFloat(document.getElementById('son-sondermuell').value) || 0;
+  if (sondermuell > 0){
+    lines.push({title:'Sondermüll-Entsorgung', desc:'Fachgerechte Entsorgung gem. Anhang KrWG', amt:sondermuell, type:'extra'});
+  }
+
+  const renov = parseFloat(document.getElementById('son-renov').value) || 0;
+  if (renov > 0){
+    const renovTotal = renov * RENOV_PER_M2;
+    lines.push({title:'Kleinrenovierung Wandanstrich', desc:`${renov} m² × ${fmtNum(RENOV_PER_M2)} €/m² inkl. Material`, amt:renovTotal, type:'extra'});
+  }
+
+  state.positions.forEach(p => {
+    lines.push({title: p.desc, desc:'Eigene Position', amt: p.amt, type:'extra'});
+  });
+
+  return {lines, vol, basis, etage, aufzug};
+}
+
+function calcTotal(){
+  const {lines} = calcLines();
+  let subtotal = lines.reduce((s, l) => s + l.amt, 0);
+
+  const eilfall = document.getElementById('kon-eilfall').checked;
+  const wochenende = document.getElementById('kon-wochenende').checked;
+  let mult = 1;
+  if (eilfall) mult *= (1 + EILFALL_PCT);
+  if (wochenende) mult *= (1 + WOCHENENDE_PCT);
+  const surcharge = subtotal * (mult - 1);
+
+  const wert = parseFloat(document.getElementById('kon-wertanrechnung').value) || 0;
+
+  let netto = subtotal + surcharge - wert;
+
+  const minNetto = MIN_AUFTRAG / (1 + MWST);
+  if (netto < minNetto){
+    netto = minNetto;
+  }
+
+  const mwst = netto * MWST;
+  let brutto = netto + mwst;
+
+  brutto = Math.round(brutto / 10) * 10;
+  const finalNetto = brutto / (1 + MWST);
+  const finalMwst = brutto - finalNetto;
+
+  return {
+    lines, subtotal, surcharge, wert,
+    netto: finalNetto, mwst: finalMwst, brutto,
+    eilfall, wochenende
+  };
+}
+
+// =============== RENDER ===============
+function render(){
+  const calc = calcTotal();
+  const vol = calcVolume();
+
+  const meta = {
+    recipient: document.getElementById('meta-recipient').value,
+    event:     document.getElementById('meta-event').value,
+    location:  document.getElementById('meta-location').value,
+    date:      document.getElementById('meta-date').value,
+    validUntil:document.getElementById('meta-valid-until').value,
+    offerId:   document.getElementById('meta-offer-id').value,
+    clerk:     document.getElementById('meta-clerk').value
+  };
+  state.meta = meta;
+
+  document.getElementById('hdr-offer-id').textContent = meta.offerId || 'AG-···';
+
+  const sigOn = document.getElementById('opt-signature').checked;
+  document.getElementById('page2').classList.toggle('show-signature', sigOn);
+
+  document.getElementById('live-total').textContent = fmt(calc.brutto);
+  document.getElementById('live-breakdown').textContent =
+    `netto ${fmt(calc.netto)} · MwSt ${fmt(calc.mwst)}` +
+    (calc.eilfall ? ' · +Eilfall' : '') +
+    (calc.wochenende ? ' · +Wochenende' : '') +
+    (calc.wert > 0 ? ` · −${fmt(calc.wert)} Wertanrechnung` : '');
+
+  document.getElementById('prev-recipient').textContent = meta.recipient || '(Empfänger eingeben in Abschnitt 0)';
+  document.getElementById('prev-event').textContent = meta.event || 'Angebot Entrümpelung';
+  document.getElementById('prev-offer-id').textContent = meta.offerId || '–';
+  document.getElementById('prev-date-today').textContent = formatDate(new Date().toISOString().split('T')[0]);
+  document.getElementById('prev-date').textContent = meta.date ? formatDate(meta.date) : '–';
+  document.getElementById('prev-valid').textContent = meta.validUntil ? formatDate(meta.validUntil) : '–';
+  document.getElementById('prev-clerk').textContent = meta.clerk || '–';
+
+  document.getElementById('prev-greeting').textContent = document.getElementById('inp-greeting').value;
+  document.getElementById('prev-intro').textContent = document.getElementById('inp-intro').value;
+
+  const objSel = document.getElementById('obj-type');
+  const objType = TYPE_LABELS[objSel.value] || '–';
+  const etage = parseInt(document.getElementById('log-etage').value, 10);
+  const aufzug = document.getElementById('log-aufzug').value === 'yes';
+  const qm = parseFloat(document.getElementById('obj-qm').value) || 0;
+  const furnishVal = document.getElementById('obj-furnish').value;
+  document.getElementById('prev-obj-type').textContent = objType;
+  document.getElementById('prev-obj-addr').textContent = meta.location || '–';
+  document.getElementById('prev-obj-etage').textContent = (ETAGE_LABELS[etage] || '–') + (aufzug ? ' · mit Aufzug' : '');
+  document.getElementById('prev-obj-qm').textContent = qm > 0 ? (qm + ' m²') : '–';
+  document.getElementById('prev-obj-vol').textContent = vol.toString().replace('.',',') + ' m³';
+  document.getElementById('prev-obj-furnish').textContent = FURNISH_LABELS[furnishVal] || '–';
+
+  const tbody = document.getElementById('prev-calc-tbody');
+  let rows = '';
+  calc.lines.forEach(l => {
+    rows += `<tr class="${l.type === 'surcharge' ? 'surcharge' : ''}">
+      <td>
+        <div class="pos-title">${escapeHtml(l.title)}</div>
+        <div class="pos-desc">${l.desc}</div>
+      </td>
+      <td>${fmt(l.amt)}</td>
+    </tr>`;
+  });
+  if (calc.eilfall || calc.wochenende){
+    const tags = [];
+    if (calc.eilfall) tags.push(`Eilfall <48 h (+${(EILFALL_PCT*100)|0} %)`);
+    if (calc.wochenende) tags.push(`Wochenende / Feiertag (+${(WOCHENENDE_PCT*100)|0} %)`);
+    rows += `<tr class="surcharge">
+      <td>
+        <div class="pos-title">Termin-Zuschlag</div>
+        <div class="pos-desc">${tags.join(' · ')}</div>
+      </td>
+      <td>+ ${fmt(calc.surcharge)}</td>
+    </tr>`;
+  }
+  if (calc.wert > 0){
+    rows += `<tr class="discount">
+      <td>
+        <div class="pos-title">Wertanrechnung</div>
+        <div class="pos-desc">verwertbare Möbel / Geräte / Sammlerstücke</div>
+      </td>
+      <td>− ${fmt(calc.wert)}</td>
+    </tr>`;
+  }
+  tbody.innerHTML = rows;
+
+  document.getElementById('prev-netto').textContent = fmt(calc.netto);
+  document.getElementById('prev-mwst').textContent = fmt(calc.mwst);
+  document.getElementById('prev-total').innerHTML = fmt(calc.brutto) + ' <small>brutto</small>';
+
+  document.getElementById('prev-zahlung').textContent = document.getElementById('inp-zahlung').value;
+}
+
+// =============== DRAFTS ===============
+function saveDraft(){
+  const calc = calcTotal();
+  const fields = {};
+  document.querySelectorAll('input[id],select[id],textarea[id]').forEach(el => {
+    if (el.type === 'checkbox') fields[el.id] = el.checked;
+    else fields[el.id] = el.value;
+  });
+  const draft = {
+    ...state.meta,
+    fields,
+    positions: state.positions,
+    totalBrutto: calc.brutto,
+    savedAt: new Date().toLocaleString('de-DE', {dateStyle:'short', timeStyle:'short'})
+  };
+  const drafts = getDrafts();
+  if (state.draftIndex !== null && drafts[state.draftIndex]){
+    drafts[state.draftIndex] = draft;
+  } else {
+    drafts.unshift(draft);
+    state.draftIndex = 0;
+  }
+  saveDrafts(drafts);
+  flash('Entwurf gespeichert ✓');
+}
+
+function flash(msg){
+  let f = document.getElementById('flash-msg');
+  if (!f){
+    f = document.createElement('div');
+    f.id = 'flash-msg';
+    f.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#2A9D8F;color:#fff;padding:12px 24px;border-radius:999px;font-weight:700;font-size:0.9rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.25);transition:opacity 0.3s';
+    document.body.appendChild(f);
+  }
+  f.textContent = msg;
+  f.style.opacity = '1';
+  clearTimeout(window._flashT);
+  window._flashT = setTimeout(() => { f.style.opacity = '0'; }, 1800);
+}
+
+// =============== HELPERS ===============
+const fmt = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(n);
+const fmtNum = n => new Intl.NumberFormat('de-DE',{minimumFractionDigits:2, maximumFractionDigits:2}).format(n);
+function formatDate(iso){
+  if (!iso) return '–';
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+function escapeHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[ch]));
+}
+
+renderPositionsList();
+init();
+</script>
+
+</body>
+</html>
