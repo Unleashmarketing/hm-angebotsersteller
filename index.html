@@ -1,1 +1,511 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeinzelMänner · Angebot-Generator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --navy: #0F3D56;
+  --navy-dark: #082638;
+  --accent: #F77F00;
+  --accent-dark: #D96E00;
+  --accent-soft: #FFF1DF;
+  --cream: #FAF7F2;
+  --warm-grey: #E9E3D9;
+  --text: #1A1A1A;
+  --text-muted: #5B5B5B;
+  --border: #DCD5C8;
+  --success: #2A9D8F;
+  --danger: #C0392B;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #94a3b1 0%, #7d8a96 100%);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 60px;
+}
+
+/* ── HEADER ── */
+.page-header {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.page-header .logo { width: 46px; height: 46px; flex-shrink: 0; }
+.page-header .brand h1 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.page-header .brand p {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 1px;
+}
+
+/* ── NEW OFFER CARD ── */
+.new-card {
+  width: 100%;
+  max-width: 860px;
+  background: var(--navy);
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+}
+.new-card h2 {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.new-card p {
+  color: #9DB6C5;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.63rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #7A9BAD;
+  margin-bottom: 5px;
+}
+.field input, .field textarea {
+  width: 100%;
+  padding: 9px 11px;
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: #fff;
+  transition: border-color 0.15s, background 0.15s;
+}
+.field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.3); }
+.field input:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(255,255,255,0.12);
+}
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.45; font-size: 0.83rem; }
+.field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) opacity(0.5); cursor: pointer; }
+.field .offerid-display {
+  padding: 9px 11px;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.45);
+  font-family: inherit;
+  letter-spacing: 0.04em;
+}
+
+.btn-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, transform 0.15s;
+  margin-top: 20px;
+  width: 100%;
+}
+.btn-start:hover { background: var(--accent-dark); transform: translateY(-1px); }
+.btn-start svg { flex-shrink: 0; }
+
+/* ── DRAFTS PANEL ── */
+.drafts-panel {
+  width: 100%;
+  max-width: 860px;
+}
+.drafts-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.drafts-head h3 {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.55);
+}
+.drafts-head .count-badge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.draft-list { display: flex; flex-direction: column; gap: 10px; }
+
+.draft-item {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  transition: box-shadow 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+.draft-item:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.18); transform: translateY(-1px); }
+
+.draft-left { min-width: 0; }
+.draft-id {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.draft-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.draft-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.draft-price {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.draft-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.btn-open {
+  flex: 1;
+  padding: 8px 14px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-open:hover { background: var(--navy-dark); }
+.btn-del {
+  padding: 8px 10px;
+  background: none;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-del:hover { background: #FDECEA; }
+
+.no-drafts {
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  color: rgba(255,255,255,0.35);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .new-card { grid-template-columns: 1fr; padding: 20px; }
+  .form-row, .form-row-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <img class="logo" src="HM Logo.svg" alt="HeinzelMänner Logo">
+  <div class="brand">
+    <h1>HeinzelMänner GmbH</h1>
+    <p>Angebot-Generator</p>
+  </div>
+</header>
+
+<!-- Neues Angebot -->
+<div class="new-card">
+  <div>
+    <h2>Neues Angebot erstellen</h2>
+    <p>Empfänger und Eckdaten eingeben, dann den Kalkulator öffnen.</p>
+
+    <div class="form-row">
+      <div class="field" style="grid-column: 1 / -1">
+        <label>Empfänger / Anschrift</label>
+        <textarea id="inp-recipient" rows="3" placeholder="Frau Maria Mustermann&#10;Hauptstraße 12&#10;69115 Heidelberg"></textarea>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Anlass / Bezeichnung</label>
+        <input type="text" id="inp-event" placeholder="z. B. Wohnungsauflösung Nachlass">
+      </div>
+      <div class="field">
+        <label>Objekt-Adresse</label>
+        <input type="text" id="inp-location" placeholder="Hauptstraße 12, 69115 Heidelberg">
+      </div>
+    </div>
+
+    <div class="form-row-3">
+      <div class="field">
+        <label>Wunschtermin</label>
+        <input type="date" id="inp-date">
+      </div>
+      <div class="field">
+        <label>Reserviert bis</label>
+        <input type="date" id="inp-valid-until">
+      </div>
+      <div class="field">
+        <label>Sachbearbeiter</label>
+        <input type="text" id="inp-clerk" placeholder="z. B. Sascha Heck">
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:12px; align-items:end;">
+      <div class="field">
+        <label>Angebotsnummer</label>
+        <div class="offerid-display" id="offer-id-display">–</div>
+      </div>
+      <button class="btn-start" onclick="startEditor()">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+        Kalkulator öffnen
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Gespeicherte Entwürfe -->
+<div class="drafts-panel">
+  <div class="drafts-head">
+    <h3>📂 Gespeicherte Entwürfe</h3>
+    <span class="count-badge" id="draft-count" style="display:none">0</span>
+  </div>
+  <div id="draft-list">
+    <div class="no-drafts">Noch keine gespeicherten Entwürfe</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const STORAGE = {
+  drafts: 'hm_angebot_drafts',
+  lastId: 'hm_angebot_last_id'
+};
+
+function autoOfferId() {
+  const last = parseInt(localStorage.getItem(STORAGE.lastId) || '100', 10) + 1;
+  return 'AG-' + String(last).padStart(3, '0') + '-' + new Date().getFullYear();
+}
+
+function getDrafts() {
+  try { return JSON.parse(localStorage.getItem(STORAGE.drafts) || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveDrafts(arr) { localStorage.setItem(STORAGE.drafts, JSON.stringify(arr)); }
+
+function fmt(n) {
+  return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n);
+}
+
+function formatDate(iso) {
+  if (!iso) return '–';
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function renderDrafts() {
+  const drafts = getDrafts();
+  const list = document.getElementById('draft-list');
+  const badge = document.getElementById('draft-count');
+
+  if (drafts.length === 0) {
+    badge.style.display = 'none';
+    list.innerHTML = '<div class="no-drafts">Noch keine gespeicherten Entwürfe</div>';
+    return;
+  }
+
+  badge.style.display = '';
+  badge.textContent = drafts.length;
+
+  list.innerHTML = drafts.map((d, i) => {
+    const recipient = d.recipient ? decodeB64(d.recipient) : '(kein Empfänger)';
+    const firstLine = recipient.split('\n')[0] || '–';
+    const event = d.event || '(kein Anlass)';
+    const price = d.totalBrutto ? fmt(d.totalBrutto) : '–';
+    const savedAt = d.savedAt || '';
+    const offerId = d.offerId || '–';
+    const date = d.date ? formatDate(d.date) : '–';
+
+    return `
+      <div class="draft-item">
+        <div class="draft-left">
+          <div class="draft-id">${escHtml(offerId)}</div>
+          <div class="draft-title">${escHtml(firstLine)} · ${escHtml(event)}</div>
+          <div class="draft-meta">Termin: ${date} · gespeichert ${savedAt}</div>
+          <div class="draft-actions">
+            <button class="btn-open" onclick="openDraft(${i}); event.stopPropagation()">Öffnen</button>
+            <button class="btn-del" onclick="deleteDraft(${i}); event.stopPropagation()">✕</button>
+          </div>
+        </div>
+        <div class="draft-price">${price}</div>
+      </div>`;
+  }).join('');
+}
+
+function openDraft(index) {
+  const drafts = getDrafts();
+  const d = drafts[index];
+  if (!d) return;
+  const params = new URLSearchParams({
+    recipient:  d.recipient  || '',
+    event:      d.event      || '',
+    location:   d.location   || '',
+    date:       d.date       || '',
+    validUntil: d.validUntil || '',
+    offerId:    d.offerId    || '',
+    clerk:      d.clerk      || '',
+    draftIndex: index
+  });
+  window.location.href = 'editor.html?' + params.toString();
+}
+
+function deleteDraft(index) {
+  if (!confirm('Entwurf löschen?')) return;
+  const drafts = getDrafts();
+  drafts.splice(index, 1);
+  saveDrafts(drafts);
+  renderDrafts();
+}
+
+function startEditor() {
+  const recipient = document.getElementById('inp-recipient').value.trim();
+  const event     = document.getElementById('inp-event').value.trim();
+  const location  = document.getElementById('inp-location').value.trim();
+  const date      = document.getElementById('inp-date').value;
+  const validUntil= document.getElementById('inp-valid-until').value;
+  const clerk     = document.getElementById('inp-clerk').value.trim();
+  const offerId   = document.getElementById('offer-id-display').textContent;
+
+  // Angebots-ID als "verbraucht" speichern
+  const match = offerId.match(/-(\d+)-/);
+  if (match) localStorage.setItem(STORAGE.lastId, parseInt(match[1]));
+
+  const encodedRecipient = recipient
+    ? btoa(unescape(encodeURIComponent(recipient)))
+    : '';
+
+  const params = new URLSearchParams({
+    recipient:  encodedRecipient,
+    event:      event,
+    location:   location,
+    date:       date,
+    validUntil: validUntil,
+    offerId:    offerId,
+    clerk:      clerk
+  });
+
+  window.location.href = 'editor.html?' + params.toString();
+}
+
+function decodeB64(str) {
+  try { return decodeURIComponent(escape(atob(str))); }
+  catch(e) { return str; }
+}
+
+function escHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
+function init() {
+  // Datum-Defaults
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('inp-date').value = today;
+
+  const valid = new Date();
+  valid.setDate(valid.getDate() + 14);
+  document.getElementById('inp-valid-until').value = valid.toISOString().split('T')[0];
+
+  // Angebotsnummer vorbelegen
+  document.getElementById('offer-id-display').textContent = autoOfferId();
+
+  renderDrafts();
+}
+
+init();
+</script>
+</body>
+</html>
 
