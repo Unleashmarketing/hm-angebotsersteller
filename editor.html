@@ -688,6 +688,111 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
       </div>
     </div>
 
+    <!-- 4b. Bodenarbeiten -->
+    <div class="section-title"><span class="num">4b</span> Bodenarbeiten</div>
+    <div class="section-box">
+      <label class="checkbox"><input type="checkbox" id="boden-entfernen-aktiv" onchange="toggleBodenEntfernen()"> Alten Boden entfernen</label>
+      <div id="boden-entfernen-block" style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid var(--border);border-radius:6px;">
+        <div class="row-2">
+          <div class="field">
+            <label>Bodenart (zu entfernen)</label>
+            <select id="boden-art-entfernen">
+              <option value="8">Laminat / Vinyl (8 €/m²)</option>
+              <option value="10">Parkett (10 €/m²)</option>
+              <option value="14">Fliesen (14 €/m²)</option>
+              <option value="12">Teppich (12 €/m²)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Fläche zu entfernen (m²)</label>
+            <input type="number" id="boden-entfernen-qm" min="0" step="1" value="0" placeholder="z. B. 60">
+          </div>
+        </div>
+        <div class="hint">Inklusive fachgerechter Entsorgung des Altbelags</div>
+      </div>
+
+      <label class="checkbox" style="margin-top:10px"><input type="checkbox" id="boden-verlegen-aktiv" onchange="toggleBodenVerlegen()"> Neuen Boden verlegen</label>
+      <div id="boden-verlegen-block" style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid var(--border);border-radius:6px;">
+        <div class="row-2">
+          <div class="field">
+            <label>Bodenart (neu verlegen)</label>
+            <select id="boden-art-verlegen">
+              <option value="15">Laminat / Klick-Vinyl (15 €/m²)</option>
+              <option value="22">Vinyl verklebt / SPC (22 €/m²)</option>
+              <option value="35">Parkett (35 €/m²)</option>
+              <option value="45">Fliesen (45 €/m²)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Fläche verlegen (m²)</label>
+            <input type="number" id="boden-verlegen-qm" min="0" step="1" value="0" placeholder="z. B. 60">
+          </div>
+        </div>
+        <div class="hint">Inkl. Material, Trittschalldämmung & Sockelleisten</div>
+      </div>
+    </div>
+
+    <!-- 4c. Malerarbeiten -->
+    <div class="section-title"><span class="num">4c</span> Malerarbeiten</div>
+    <div class="section-box">
+      <label class="checkbox"><input type="checkbox" id="maler-tapete-entfernen-aktiv" onchange="toggleMalerTapete()"> Alte Tapete entfernen</label>
+      <div id="maler-tapete-entfernen-block" style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid var(--border);border-radius:6px;">
+        <div class="row-2">
+          <div class="field">
+            <label>Tapetenart</label>
+            <select id="maler-tapete-art">
+              <option value="7">Vlies- / Raufasertapete (7 €/m²)</option>
+              <option value="10">Mehrere Schichten / Papier (10 €/m²)</option>
+              <option value="13">Vinyltapete / schwer löslich (13 €/m²)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Wandfläche (m²)</label>
+            <input type="number" id="maler-tapete-qm" min="0" step="1" value="0" placeholder="z. B. 80">
+          </div>
+        </div>
+        <div class="hint">Inkl. Einweichen, Abziehen & Entsorgung</div>
+      </div>
+
+      <label class="checkbox" style="margin-top:10px"><input type="checkbox" id="maler-streichen-aktiv" onchange="toggleMalerStreichen()"> Wände & Decken streichen</label>
+      <div id="maler-streichen-block" style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid var(--border);border-radius:6px;">
+        <div class="row-2">
+          <div class="field">
+            <label>Streichfläche (m²)</label>
+            <input type="number" id="maler-streichen-qm" min="0" step="1" value="0" placeholder="z. B. 100">
+          </div>
+          <div class="field">
+            <label>Qualität / Anstriche</label>
+            <select id="maler-streichen-art">
+              <option value="9">1× Anstrich Standard (9 €/m²)</option>
+              <option value="12">2× Anstrich inkl. Grundierung (12 €/m²)</option>
+              <option value="16">Premium inkl. Spachteln (16 €/m²)</option>
+            </select>
+          </div>
+        </div>
+        <div class="hint">Inkl. Abkleben, Farbe & Materialien</div>
+      </div>
+
+      <label class="checkbox" style="margin-top:10px"><input type="checkbox" id="maler-tapezieren-aktiv" onchange="toggleMalerTapezieren()"> Neue Tapete verlegen</label>
+      <div id="maler-tapezieren-block" style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid var(--border);border-radius:6px;">
+        <div class="row-2">
+          <div class="field">
+            <label>Tapetenart (neu)</label>
+            <select id="maler-tapezieren-art">
+              <option value="14">Raufaser / Vlies (14 €/m²)</option>
+              <option value="18">Qualitätstapete (18 €/m²)</option>
+              <option value="24">Design- / Mustertapete (24 €/m²)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Fläche tapezieren (m²)</label>
+            <input type="number" id="maler-tapezieren-qm" min="0" step="1" value="0" placeholder="z. B. 80">
+          </div>
+        </div>
+        <div class="hint">Inkl. Tapete, Kleister & fachgerechter Verlegung</div>
+      </div>
+    </div>
+
     <!-- 5. Termin & Konditionen -->
     <div class="section-title"><span class="num">5</span> Termin &amp; Konditionen</div>
     <div class="section-box">
@@ -931,6 +1036,13 @@ const EILFALL_PCT = 0.20;
 const WOCHENENDE_PCT = 0.12;
 const MIN_AUFTRAG = 590;
 const MWST = 0.19;
+
+// =============== TOGGLE HELPERS ===============
+function toggleBodenEntfernen(){ document.getElementById('boden-entfernen-block').style.display = document.getElementById('boden-entfernen-aktiv').checked ? 'block' : 'none'; render(); }
+function toggleBodenVerlegen(){ document.getElementById('boden-verlegen-block').style.display = document.getElementById('boden-verlegen-aktiv').checked ? 'block' : 'none'; render(); }
+function toggleMalerTapete(){ document.getElementById('maler-tapete-entfernen-block').style.display = document.getElementById('maler-tapete-entfernen-aktiv').checked ? 'block' : 'none'; render(); }
+function toggleMalerStreichen(){ document.getElementById('maler-streichen-block').style.display = document.getElementById('maler-streichen-aktiv').checked ? 'block' : 'none'; render(); }
+function toggleMalerTapezieren(){ document.getElementById('maler-tapezieren-block').style.display = document.getElementById('maler-tapezieren-aktiv').checked ? 'block' : 'none'; render(); }
 
 // =============== PDF EXPORT ===============
 async function exportPDF(){
@@ -1209,6 +1321,55 @@ function calcLines(){
   state.positions.forEach(p => {
     lines.push({title: p.desc, desc:'Eigene Position', amt: p.amt, type:'extra'});
   });
+
+  // Bodenarbeiten
+  if (document.getElementById('boden-entfernen-aktiv').checked){
+    const qm = parseFloat(document.getElementById('boden-entfernen-qm').value) || 0;
+    const sel = document.getElementById('boden-art-entfernen');
+    const rate = parseFloat(sel.value);
+    if (qm > 0){
+      const amt = qm * rate;
+      lines.push({title:'Bodenbelag entfernen', desc:`${qm} m² · ${sel.options[sel.selectedIndex].text} · inkl. Entsorgung`, amt, type:'extra'});
+    }
+  }
+  if (document.getElementById('boden-verlegen-aktiv').checked){
+    const qm = parseFloat(document.getElementById('boden-verlegen-qm').value) || 0;
+    const sel = document.getElementById('boden-art-verlegen');
+    const rate = parseFloat(sel.value);
+    if (qm > 0){
+      const amt = qm * rate;
+      lines.push({title:'Neuen Bodenbelag verlegen', desc:`${qm} m² · ${sel.options[sel.selectedIndex].text} · inkl. Material, Dämmung &amp; Leisten`, amt, type:'extra'});
+    }
+  }
+
+  // Malerarbeiten
+  if (document.getElementById('maler-tapete-entfernen-aktiv').checked){
+    const qm = parseFloat(document.getElementById('maler-tapete-qm').value) || 0;
+    const sel = document.getElementById('maler-tapete-art');
+    const rate = parseFloat(sel.value);
+    if (qm > 0){
+      const amt = qm * rate;
+      lines.push({title:'Alte Tapete entfernen', desc:`${qm} m² · ${sel.options[sel.selectedIndex].text} · inkl. Einweichen &amp; Entsorgung`, amt, type:'extra'});
+    }
+  }
+  if (document.getElementById('maler-streichen-aktiv').checked){
+    const qm = parseFloat(document.getElementById('maler-streichen-qm').value) || 0;
+    const sel = document.getElementById('maler-streichen-art');
+    const rate = parseFloat(sel.value);
+    if (qm > 0){
+      const amt = qm * rate;
+      lines.push({title:'Wände &amp; Decken streichen', desc:`${qm} m² · ${sel.options[sel.selectedIndex].text} · inkl. Material &amp; Abkleben`, amt, type:'extra'});
+    }
+  }
+  if (document.getElementById('maler-tapezieren-aktiv').checked){
+    const qm = parseFloat(document.getElementById('maler-tapezieren-qm').value) || 0;
+    const sel = document.getElementById('maler-tapezieren-art');
+    const rate = parseFloat(sel.value);
+    if (qm > 0){
+      const amt = qm * rate;
+      lines.push({title:'Neue Tapete verlegen', desc:`${qm} m² · ${sel.options[sel.selectedIndex].text} · inkl. Tapete, Kleister &amp; Verlegung`, amt, type:'extra'});
+    }
+  }
 
   return {lines, vol, basis, etage, aufzug};
 }
