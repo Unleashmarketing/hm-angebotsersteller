@@ -35,7 +35,7 @@ body{
 
 @page{
   size:A4 portrait;
-  margin:22mm 20mm 38mm 20mm;  /* top / right / bottom (Reserve für Fixed-Footer) / left */
+  margin:22mm 20mm 38mm 20mm;
 }
 
 /* =============== EDITOR PANEL =============== */
@@ -249,8 +249,6 @@ body{
 }
 .service-block.expanded .service-body{display:block}
 .service-block:not(.enabled) .service-body{opacity:0.55}
-.service-block:not(.enabled) .service-body input,
-.service-block:not(.enabled) .service-body select{pointer-events:auto}
 .svc-hint{
   font-size:0.72rem;
   color:var(--text-muted);
@@ -331,6 +329,19 @@ body{
 }
 .position-item .del-x:hover{color:#7E1A0E}
 
+/* Anfahrt-Info-Box im Editor */
+.anfahrt-info{
+  background:#EEF6FF;
+  border:1px solid #B8D4EE;
+  border-radius:6px;
+  padding:8px 11px;
+  font-size:0.72rem;
+  color:#0F3D56;
+  margin-top:6px;
+  line-height:1.5;
+}
+.anfahrt-info strong{font-weight:700}
+
 /* =============== PREVIEW PANEL =============== */
 .preview-panel{
   flex-grow:1;
@@ -357,7 +368,6 @@ body{
   color:#1A1A1A;
 }
 
-/* Page frame table — tfoot natively repeats on every printed page */
 .page-frame{
   width:100%;
   border-collapse:collapse;
@@ -373,7 +383,6 @@ body{
   padding-top:10mm;
 }
 
-/* Print logo top right */
 .print-logo{
   position:absolute;
   top:14mm;
@@ -383,7 +392,6 @@ body{
   z-index:5;
 }
 
-/* Sender mini-line */
 .sender-line{
   font-size:7pt;
   color:#5B5B5B;
@@ -394,7 +402,6 @@ body{
   width:90mm;
 }
 
-/* Empfänger box */
 .address-box{
   font-size:11pt;
   line-height:1.5;
@@ -403,7 +410,6 @@ body{
   white-space:pre-line;
 }
 
-/* Document meta (offer no, date) */
 .meta-table{
   width:75mm;
   font-size:9pt;
@@ -439,7 +445,6 @@ body{
   margin-bottom:8mm;
 }
 
-/* Object summary */
 .object-grid{
   display:grid;
   grid-template-columns:repeat(3, 1fr);
@@ -466,7 +471,6 @@ body{
 }
 .object-grid .val{font-weight:700;color:#0F3D56;font-size:10pt;margin-top:1mm}
 
-/* Service block in quote */
 .svc-section{
   margin:0 0 7mm;
   break-inside:avoid;
@@ -502,7 +506,6 @@ body{
 }
 .svc-section-meta strong{color:#0F3D56}
 
-/* Surcharges section header */
 .surcharge-head{
   background:#F2EBDE;
   padding:2.5mm 4mm;
@@ -515,7 +518,6 @@ body{
   border-radius:3px;
 }
 
-/* Calculation table */
 .calc-table{
   width:100%;
   border-collapse:collapse;
@@ -555,7 +557,6 @@ body{
 .calc-table tr.discount td{color:#2A9D8F}
 .calc-table tr.surcharge td{color:#D96E00}
 
-/* Big total box */
 .total-box{
   background:#0F3D56;
   color:#fff;
@@ -593,7 +594,6 @@ body{
 .tax-table td{padding:1mm 0}
 .tax-table td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
 
-/* Inkludierte Leistungen */
 .included{
   background:#FFF1DF;
   border-left:3px solid #F77F00;
@@ -619,7 +619,6 @@ body{
   font-weight:bold;
 }
 
-/* Zahlung */
 .zahlung{
   font-size:8.5pt;
   color:#5B5B5B;
@@ -628,7 +627,6 @@ body{
   white-space:pre-wrap;
 }
 
-/* Footer — sits in <tfoot>, repeats on every printed page natively */
 .doc-footer{
   display:grid;
   grid-template-columns:repeat(3, 1fr);
@@ -678,8 +676,6 @@ body{
     width:100%;
     gap:0;
   }
-
-  /* A4 page flow container — @page handles outer margins */
   .a4-page{
     box-shadow:none;
     margin:0;
@@ -690,8 +686,6 @@ body{
     overflow:visible;
     position:relative;
   }
-
-  /* Logo nur auf erster Seite (absolute innerhalb .a4-page) */
   .print-logo{
     position:absolute;
     top:0;
@@ -699,23 +693,9 @@ body{
     width:30mm;
     height:30mm;
   }
-
-  /* Outer page-frame fills available width */
-  .page-frame{
-    width:100%;
-  }
-
-  /* Tabellenkopf wiederholt sich auf Folgeseiten */
-  .calc-table thead{
-    display:table-header-group;
-  }
-
-  /* Footer (tfoot) wiederholt sich automatisch als table-footer-group */
-  .page-frame > tfoot{
-    display:table-footer-group;
-  }
-
-  /* Zerreiß-Schutz für wichtige Blöcke */
+  .page-frame{width:100%}
+  .calc-table thead{display:table-header-group}
+  .page-frame > tfoot{display:table-footer-group}
   .object-grid,
   .total-box,
   .included,
@@ -726,26 +706,18 @@ body{
     page-break-inside:avoid;
     break-inside:avoid;
   }
-
-  /* Tabellenzeilen nicht zerschneiden */
   .calc-table tr{
     page-break-inside:avoid;
     break-inside:avoid;
   }
-
-  /* Überschriften nicht alleinstehend am Seitenende */
   h1, h2, h3, .doc-title, .doc-subtitle, .included h3{
     page-break-after:avoid;
     break-after:avoid;
   }
-
-  /* Witwen / Waisen vermeiden */
   p, .intro-text, .zahlung{
     orphans:3;
     widows:3;
   }
-
-  /* Farbe / Hintergrund forcieren beim Drucken */
   *{
     -webkit-print-color-adjust:exact !important;
     print-color-adjust:exact !important;
@@ -771,7 +743,7 @@ body{
       <h1>Angebot kalkulieren</h1>
       <div class="sub" id="hdr-offer-id">AG-···-2026</div>
     </div>
-    <a href="index.html" class="back" title="Zurück zur Startseite">←</a>
+    <a href="index.html" class="back" title="Zurück zur Startseite">← Übersicht</a>
   </div>
 
   <div class="editor-body">
@@ -1149,6 +1121,8 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
           </select>
         </div>
       </div>
+
+      <!-- ===== ANFAHRT (neu: mit Anzahl Fahrten) ===== -->
       <div class="row-2">
         <div class="field">
           <label>Anfahrt von Leimen (km)</label>
@@ -1156,15 +1130,24 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
           <div class="hint">Erste 15 km im Festpreis enthalten</div>
         </div>
         <div class="field">
-          <label>Tragweg Container ↔ Wohnung (m)</label>
-          <input type="number" id="log-tragweg" min="0" step="1" value="15">
-          <div class="hint">Bis 25 m im Festpreis</div>
+          <label>Anzahl Fahrten</label>
+          <input type="number" id="log-fahrten" min="1" step="1" value="1">
+          <div class="hint">z. B. 2 bei Bodensanierung + Malerarbeiten</div>
         </div>
+      </div>
+      <div class="anfahrt-info" id="anfahrt-info-box">
+        1 Fahrt · 0 km · im Festpreis enthalten
+      </div>
+
+      <div class="field" style="margin-top:10px">
+        <label>Tragweg Container ↔ Wohnung (m)</label>
+        <input type="number" id="log-tragweg" min="0" step="1" value="15">
+        <div class="hint">Bis 25 m im Festpreis</div>
       </div>
       <label class="checkbox"><input type="checkbox" id="log-halteverbot"> Halteverbotszone einrichten (+95 €)</label>
     </div>
 
-    <!-- 4. Konditionen (gelten gesamt) -->
+    <!-- 4. Konditionen -->
     <div class="section-title"><span class="num">4</span> Konditionen (Gesamt)</div>
     <div class="section-box">
       <div class="field">
@@ -1185,7 +1168,7 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
       </div>
     </div>
 
-    <!-- 6. Eigene Positionen -->
+    <!-- 5. Eigene Positionen -->
     <div class="section-title"><span class="num">5</span> Eigene Positionen (optional)</div>
     <div class="section-box">
       <div class="positions-list" id="positions-list"></div>
@@ -1202,7 +1185,7 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
       <button class="btn btn-add" onclick="addPosition()">+ Position hinzufügen</button>
     </div>
 
-    <!-- 7. Zahlungsbedingungen & Darstellung -->
+    <!-- 6. Zahlung & Darstellung -->
     <div class="section-title"><span class="num">6</span> Zahlung &amp; Darstellung</div>
     <div class="section-box">
       <div class="field">
@@ -1210,7 +1193,7 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
         <textarea id="inp-zahlung">Der Festpreis ist nach erfolgter Räumung und besenreiner Übergabe in bar oder per Überweisung innerhalb 7 Tagen ohne Abzug fällig. Bei Aufträgen ab 1.500 € netto behalten wir uns eine Anzahlung in Höhe von 30 % bei Auftragsannahme vor. Es gelten unsere AGB.</textarea>
       </div>
       <label class="checkbox"><input type="checkbox" id="opt-signature"> Unterschriftsfelder im Angebot anzeigen</label>
-      <div class="hint" style="margin-left:24px;margin-top:-2px">Nur einschalten, wenn das Angebot vor Ort unterschrieben werden soll. Bei E-Mail-Versand nicht nötig.</div>
+      <div class="hint" style="margin-left:24px;margin-top:-2px">Nur einschalten, wenn das Angebot vor Ort unterschrieben werden soll.</div>
     </div>
 
     <!-- LIVE TOTAL -->
@@ -1228,23 +1211,13 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
 <!-- =============== PREVIEW =============== -->
 <main class="preview-panel">
   <article class="a4-page" id="page1">
-
-    <!-- Logo top right (only first page – absolute within .a4-page) -->
     <img class="print-logo" src="HM-Logo.svg" alt="HeinzelMänner Logo">
-
-    <!-- Outer table = page frame. tfoot repeats on every printed page. -->
     <table class="page-frame">
       <tbody>
         <tr>
           <td class="page-body">
-
-            <!-- Sender mini-line -->
             <div class="sender-line">HeinzelMänner GmbH · Im Hagen 4 · 69181 Leimen</div>
-
-            <!-- Empfänger -->
             <div class="address-box" id="prev-recipient"></div>
-
-            <!-- Meta -->
             <table class="meta-table">
               <tr><td>Angebot Nr.</td><td id="prev-offer-id">–</td></tr>
               <tr><td>Datum</td><td id="prev-date-today">–</td></tr>
@@ -1252,38 +1225,26 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
               <tr><td>Reserviert bis</td><td id="prev-valid">–</td></tr>
               <tr><td>Sachbearbeiter</td><td id="prev-clerk">–</td></tr>
             </table>
-
             <h1 class="doc-title" id="prev-event">Festpreisangebot</h1>
             <div class="doc-subtitle" id="prev-subtitle">Festpreisangebot</div>
-
             <p style="font-size:10pt;margin-bottom:3mm;font-weight:600" id="prev-greeting">Sehr geehrte Damen und Herren,</p>
             <div class="intro-text" id="prev-intro"></div>
-
-            <!-- Object compact bar (Adresse + Etage) -->
             <div class="object-grid" id="prev-object-bar">
               <div><div class="lbl">Objekt-Adresse</div><div class="val" id="prev-obj-addr">–</div></div>
               <div><div class="lbl">Etage</div><div class="val" id="prev-obj-etage">Erdgeschoss</div></div>
               <div><div class="lbl">Termin</div><div class="val" id="prev-obj-termin">nach Vereinbarung</div></div>
             </div>
-
-            <!-- Services rendered dynamically per enabled service -->
             <div id="prev-services-container"></div>
-
-            <!-- Surcharges (Logistik + Konditionen) -->
             <div id="prev-surcharges-wrap" style="display:none">
               <div class="surcharge-head">Logistik &amp; Konditionen (auf Gesamtsumme)</div>
               <table class="calc-table" style="margin-bottom:5mm">
                 <tbody id="prev-surcharges-tbody"></tbody>
               </table>
             </div>
-
-            <!-- Tax breakdown -->
             <table class="tax-table">
               <tr><td>Zwischensumme netto</td><td id="prev-netto">0,00 €</td></tr>
               <tr><td>zzgl. 19 % MwSt.</td><td id="prev-mwst">0,00 €</td></tr>
             </table>
-
-            <!-- Total Box -->
             <div class="total-box">
               <div>
                 <span class="badge">Festpreis garantiert</span>
@@ -1291,22 +1252,15 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
               </div>
               <div class="price" id="prev-total">0,00 €</div>
             </div>
-
-            <!-- Inkludierte Leistungen (dynamisch je Service) -->
             <div class="included" id="prev-included">
               <h3>Im Festpreis enthalten</h3>
               <ul id="prev-included-list"></ul>
             </div>
-
-            <!-- Zahlungsbedingungen -->
             <div class="zahlung" id="prev-zahlung"></div>
-
-            <!-- Signature -->
             <div class="signature-row">
               <div class="sig">Ort, Datum</div>
               <div class="sig">Unterschrift Auftraggeber</div>
             </div>
-
           </td>
         </tr>
       </tbody>
@@ -1335,14 +1289,12 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
         </tr>
       </tfoot>
     </table>
-
   </article>
 </main>
 
 <script>
 'use strict';
 
-// =============== STATE ===============
 const STORAGE = {
   drafts: 'hm_angebot_drafts',
   lastId: 'hm_angebot_last_id'
@@ -1354,7 +1306,6 @@ const state = {
   draftIndex: null
 };
 
-// =============== CONSTANTS & LABELS ===============
 const TYPE_LABELS = {
   '1zi':'1-Zimmer-Wohnung','2zi':'2-Zimmer-Wohnung','3zi':'3-Zimmer-Wohnung',
   '4zi':'4-Zimmer-Wohnung','5zi':'5+ Zimmer / Maisonette','efh':'Einfamilienhaus',
@@ -1367,7 +1318,6 @@ const ETAGE_PCT = {0:0, 1:0.04, 2:0.08, 3:0.14, 4:0.20};
 const SVC_KEYS = ['entr','maler','boden','trocken','abriss'];
 const SVC_LABEL = {entr:'Entrümpelung', maler:'Malerarbeiten', boden:'Bodensanierung', trocken:'Trockenbau', abriss:'Abriss / Rückbau'};
 
-// Im Festpreis enthalten – pro Service eigene Liste, gemeinsame am Schluss
 const SVC_INCLUSIONS = {
   entr: [
     'Vollständiges Ausräumen aller vereinbarten Räume',
@@ -1415,16 +1365,12 @@ const HALTEVERBOT = 95;
 const EILFALL_PCT = 0.20, WOCHENENDE_PCT = 0.12;
 const MIN_AUFTRAG = 590;
 const MWST = 0.19;
-// Maler
 const P_WAND = 8, P_DECKE = 9;
 const P_VORB_SPACHTELN = 5, P_VORB_TAPETE = 6;
 const P_FARBE_BUNT = 2.50, P_FARBE_EDEL = 4;
 const P_TUER = 38, P_HEIZK = 42;
-// Boden
 const P_BODEN_RAUS = 12, P_ESTRICH_RAUS = 34, P_AUSGLEICH = 14, P_SOCKEL = 7;
-// Trockenbau
 const P_TROCKEN_ABBRUCH = 32, P_TROCKEN_DECKE = 65, P_TROCKEN_TUER = 195;
-// Abriss
 const P_INNENWAND = 42, P_BODEN_ABBR = 48, P_FLIESEN_ABSCHL = 22;
 const P_BAD_DEMO = 720, P_KUECHE_DEMO = 480;
 const P_ZARGE = 35, P_HEIZK_DEMO = 65;
@@ -1432,8 +1378,6 @@ const P_ZARGE = 35, P_HEIZK_DEMO = 65;
 // =============== INIT ===============
 function init(){
   const params = new URLSearchParams(window.location.search);
-
-  // Pre-fill meta fields from URL params (passed from index.html)
   let recipient = '';
   if (params.has('recipient')){
     try { recipient = decodeURIComponent(escape(atob(params.get('recipient')))); }
@@ -1454,7 +1398,6 @@ function init(){
     if (d) restoreFromDraft(d);
   }
 
-  // Wire all inputs to live re-render
   document.querySelectorAll('input,select,textarea').forEach(el => {
     el.addEventListener('input', render);
     el.addEventListener('change', render);
@@ -1529,16 +1472,13 @@ function renderPositionsList(){
   `).join('');
 }
 
-// =============== SERVICE CALC ENGINE ===============
-
-// Helper: read numeric input safely
+// =============== CALC ENGINE ===============
 function num(id){ return Math.max(0, parseFloat(document.getElementById(id).value) || 0); }
 function intVal(id){ return Math.max(0, parseInt(document.getElementById(id).value, 10) || 0); }
 function chk(id){ const el = document.getElementById(id); return el && el.checked; }
 function selectedText(id){ const s = document.getElementById(id); return s.options[s.selectedIndex].text; }
 function selectedDataFactor(id){ const s = document.getElementById(id); return parseFloat(s.options[s.selectedIndex].dataset.factor); }
 
-// --- 1. ENTRÜMPELUNG ---
 function calcEntr(){
   const enabled = chk('svc-entr-enabled');
   const objType = document.getElementById('entr-type').value;
@@ -1556,7 +1496,6 @@ function calcEntr(){
   if (!isNaN(override) && override > 0) vol = override;
   vol = Math.round(vol * 10) / 10;
 
-  // Update m³ live hint in editor
   const out = document.getElementById('entr-vol-out');
   if (out) out.textContent = Math.round(vol).toString();
 
@@ -1583,7 +1522,6 @@ function calcEntr(){
   };
 }
 
-// --- 2. MALERARBEITEN ---
 function calcMaler(){
   const enabled = chk('svc-maler-enabled');
   if (!enabled) return {key:'maler', enabled, lines:[], subtotal:0};
@@ -1626,7 +1564,6 @@ function calcMaler(){
   return {key:'maler', enabled, lines, subtotal, label:'Malerarbeiten', meta: metaParts.join(' · ')};
 }
 
-// --- 3. BODENSANIERUNG ---
 function calcBoden(){
   const enabled = chk('svc-boden-enabled');
   if (!enabled) return {key:'boden', enabled, lines:[], subtotal:0};
@@ -1654,7 +1591,6 @@ function calcBoden(){
   return {key:'boden', enabled, lines, subtotal, label:'Bodensanierung', meta: mp.join(' · ')};
 }
 
-// --- 4. TROCKENBAU ---
 function calcTrocken(){
   const enabled = chk('svc-trocken-enabled');
   if (!enabled) return {key:'trocken', enabled, lines:[], subtotal:0};
@@ -1680,7 +1616,6 @@ function calcTrocken(){
   return {key:'trocken', enabled, lines, subtotal, label:'Trockenbau', meta: mp.join(' · ')};
 }
 
-// --- 5. ABRISS ---
 function calcAbriss(){
   const enabled = chk('svc-abriss-enabled');
   if (!enabled) return {key:'abriss', enabled, lines:[], subtotal:0};
@@ -1713,11 +1648,47 @@ function calcAbriss(){
   return {key:'abriss', enabled, lines, subtotal, label:'Abriss / Rückbau', meta: mp.join(' · ')};
 }
 
-// --- LOGISTIK + PSA Zuschläge ---
-function calcSurcharges(servicesSubtotal){
+// =============== ANFAHRT-KALKULATION (NEU) ===============
+function calcAnfahrt(fahrten) {
+  const km = num('log-km');
+  fahrten = Math.max(1, fahrten);
+
+  let kostenProFahrt = 0;
+  let descProFahrt = '';
+
+  if (km === 0) {
+    // 0 km eingegeben = keine Anfahrtspauschale
+    return { lines: [], total: 0, infoText: `${fahrten} Fahrt${fahrten>1?'en':''} · 0 km · im Festpreis enthalten` };
+  } else if (km <= ANFAHRT_INCL_KM) {
+    kostenProFahrt = ANFAHRT_BASE;
+    descProFahrt = `Pauschale bis ${ANFAHRT_INCL_KM} km (${km} km ab Leimen)`;
+  } else {
+    kostenProFahrt = ANFAHRT_BASE + (km - ANFAHRT_INCL_KM) * ANFAHRT_PER_KM;
+    descProFahrt = `${fmtNum(ANFAHRT_BASE)} € Pauschale + (${km}−${ANFAHRT_INCL_KM}) × ${fmtNum(ANFAHRT_PER_KM)} €/km`;
+  }
+
+  const gesamtKosten = kostenProFahrt * fahrten;
   const lines = [];
 
-  // Etage (no Aufzug) — % auf Leistungssumme
+  if (fahrten === 1) {
+    lines.push({ title: 'Anfahrt', desc: descProFahrt, amt: kostenProFahrt });
+  } else {
+    lines.push({
+      title: `Anfahrt (${fahrten}× Fahrt)`,
+      desc: `${fahrten} × ${fmt(kostenProFahrt)} · ${descProFahrt}`,
+      amt: gesamtKosten
+    });
+  }
+
+  const infoText = `${fahrten} Fahrt${fahrten>1?'en':''} · ${km} km ab Leimen · ${fmt(kostenProFahrt)} pro Fahrt · gesamt ${fmt(gesamtKosten)}`;
+  return { lines, total: gesamtKosten, infoText };
+}
+
+// =============== SURCHARGES ===============
+function calcSurcharges(servicesSubtotal, fahrten){
+  const lines = [];
+
+  // Etage
   const etage = parseInt(document.getElementById('log-etage').value, 10);
   const aufzug = document.getElementById('log-aufzug').value === 'yes';
   if (!aufzug && ETAGE_PCT[etage] > 0 && servicesSubtotal > 0){
@@ -1725,16 +1696,11 @@ function calcSurcharges(servicesSubtotal){
     lines.push({title:`Etagen-Zuschlag ${etage}. OG (ohne Aufzug)`, desc:`${(ETAGE_PCT[etage]*100).toFixed(0)} % auf Leistungs-Summe`, amt: etageZ});
   }
 
-  const km = num('log-km');
-  if (km > 0){
-    if (km <= ANFAHRT_INCL_KM){
-      lines.push({title:'Anfahrt', desc:`Pauschale bis ${ANFAHRT_INCL_KM} km (${km} km ab Leimen)`, amt: ANFAHRT_BASE});
-    } else {
-      const anfahrt = ANFAHRT_BASE + (km - ANFAHRT_INCL_KM) * ANFAHRT_PER_KM;
-      lines.push({title:'Anfahrt', desc:`${fmtNum(ANFAHRT_BASE)} € Pauschale + (${km}−${ANFAHRT_INCL_KM}) × ${fmtNum(ANFAHRT_PER_KM)} €/km`, amt: anfahrt});
-    }
-  }
+  // Anfahrt (mit Anzahl Fahrten)
+  const anfahrtCalc = calcAnfahrt(fahrten);
+  anfahrtCalc.lines.forEach(l => lines.push(l));
 
+  // Tragweg
   const tragweg = num('log-tragweg');
   if (tragweg > TRAGWEG_INCL){
     const trag = (tragweg - TRAGWEG_INCL) * TRAGWEG_PER_M;
@@ -1757,9 +1723,9 @@ function calcSurcharges(servicesSubtotal){
 }
 
 function calcTotal(){
+  const fahrten = Math.max(1, intVal('log-fahrten') || 1);
   const services = [calcEntr(), calcMaler(), calcBoden(), calcTrocken(), calcAbriss()];
 
-  // Per-service editor display
   services.forEach(s => {
     const subEl = document.getElementById('svc-' + s.key + '-sub');
     if (subEl){
@@ -1774,7 +1740,7 @@ function calcTotal(){
   const customSubtotal = customLines.reduce((s,l)=>s+l.amt, 0);
   const servicesSubtotal = services.reduce((s,sv)=>s+sv.subtotal, 0) + customSubtotal;
 
-  const surchargeLines = servicesSubtotal > 0 ? calcSurcharges(servicesSubtotal) : [];
+  const surchargeLines = servicesSubtotal > 0 ? calcSurcharges(servicesSubtotal, fahrten) : [];
   const surchargeTotal = surchargeLines.reduce((s,l)=>s+l.amt, 0);
 
   const eilfall = chk('kon-eilfall');
@@ -1797,8 +1763,13 @@ function calcTotal(){
   const finalNetto = brutto / (1 + MWST);
   const finalMwst = brutto - finalNetto;
 
+  // Update Anfahrt-Info-Box im Editor
+  const anfahrtInfo = calcAnfahrt(fahrten);
+  const infoBox = document.getElementById('anfahrt-info-box');
+  if (infoBox) infoBox.textContent = anfahrtInfo.infoText;
+
   return {
-    services, customLines, surchargeLines,
+    services, customLines, surchargeLines, fahrten,
     servicesSubtotal, customSubtotal, surchargeTotal, multSurcharge, wert,
     eilfall, wochenende,
     netto: finalNetto, mwst: finalMwst, brutto
@@ -1809,7 +1780,6 @@ function calcTotal(){
 function render(){
   const calc = calcTotal();
 
-  // Meta
   const meta = {
     recipient: document.getElementById('meta-recipient').value,
     event:     document.getElementById('meta-event').value,
@@ -1823,21 +1793,19 @@ function render(){
 
   document.getElementById('hdr-offer-id').textContent = meta.offerId || 'AG-···';
 
-  // Signature toggle
   const sigOn = chk('opt-signature');
   document.getElementById('page1').classList.toggle('show-signature', sigOn);
 
-  // Live total
   document.getElementById('live-total').textContent = fmt(calc.brutto);
   const enabledCount = calc.services.filter(s => s.enabled).length;
   document.getElementById('live-breakdown').textContent =
     (enabledCount > 0 ? `${enabledCount} Service${enabledCount !== 1 ? 's' : ''} aktiv · ` : 'Noch keine Leistung aktiviert · ') +
     `netto ${fmt(calc.netto)} · MwSt ${fmt(calc.mwst)}` +
+    (calc.fahrten > 1 ? ` · ${calc.fahrten}× Anfahrt` : '') +
     (calc.eilfall ? ' · +Eilfall' : '') +
     (calc.wochenende ? ' · +Wochenende' : '') +
     (calc.wert > 0 ? ` · −${fmt(calc.wert)} Anrechnung` : '');
 
-  // Active services (used for dynamic subtitle, inclusion list, etc.)
   const activeServices = calc.services.filter(s => s.enabled && s.lines.length > 0);
   const activeLabels = activeServices.map(s => s.label);
   let dynSubtitle = 'Festpreisangebot';
@@ -1846,7 +1814,6 @@ function render(){
   else if (activeLabels.length > 2) dynSubtitle += ' · ' + activeLabels.slice(0, -1).join(', ') + ' & ' + activeLabels.slice(-1);
   document.getElementById('prev-subtitle').textContent = dynSubtitle;
 
-  // Preview meta
   document.getElementById('prev-recipient').textContent = meta.recipient || '(Empfänger eingeben in Abschnitt 0)';
   document.getElementById('prev-event').textContent = meta.event || (activeLabels.length > 0 ? 'Festpreisangebot ' + activeLabels.join(' / ') : 'Festpreisangebot');
   document.getElementById('prev-offer-id').textContent = meta.offerId || '–';
@@ -1855,11 +1822,9 @@ function render(){
   document.getElementById('prev-valid').textContent = meta.validUntil ? formatDate(meta.validUntil) : '–';
   document.getElementById('prev-clerk').textContent = meta.clerk || '–';
 
-  // Anrede + Intro
   document.getElementById('prev-greeting').textContent = document.getElementById('inp-greeting').value;
   document.getElementById('prev-intro').textContent = document.getElementById('inp-intro').value;
 
-  // Object header
   const etage = parseInt(document.getElementById('log-etage').value, 10);
   const aufzug = document.getElementById('log-aufzug').value === 'yes';
   document.getElementById('prev-obj-addr').textContent = meta.location || '–';
@@ -1938,7 +1903,6 @@ function render(){
   document.getElementById('prev-total').innerHTML = fmt(calc.brutto) + ' <small>brutto</small>';
   document.getElementById('prev-zahlung').textContent = document.getElementById('inp-zahlung').value;
 
-  // Dynamic "Im Festpreis enthalten" list — per-service items + common items, no duplicates
   const incEl = document.getElementById('prev-included');
   const incList = document.getElementById('prev-included-list');
   if (activeServices.length === 0){
@@ -1963,7 +1927,7 @@ function render(){
 document.addEventListener('click', e => {
   const head = e.target.closest('[data-svc-head]');
   if (!head) return;
-  if (e.target.closest('.service-checkbox')) return;  // checkbox toggles enabled, not expand
+  if (e.target.closest('.service-checkbox')) return;
   head.parentElement.classList.toggle('expanded');
 });
 document.addEventListener('change', e => {
@@ -1996,7 +1960,6 @@ function saveDraft(){
     state.draftIndex = 0;
   }
   saveDrafts(drafts);
-  // Brief feedback
   flash('Entwurf gespeichert ✓');
 }
 
@@ -2032,6 +1995,5 @@ function escapeHtml(s){
 renderPositionsList();
 init();
 </script>
-
 </body>
 </html>
