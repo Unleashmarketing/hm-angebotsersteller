@@ -1205,6 +1205,11 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
         </div>
       </div>
       <div class="field" style="margin-bottom:10px">
+        <label>Detailtext (optional)</label>
+        <input type="text" id="pos-detail" placeholder="z. B. inkl. Demontage und Entsorgung">
+        <div class="hint">Erscheint im Angebot als kleine Unterzeile. Leer lassen, wenn keine nötig ist.</div>
+      </div>
+      <div class="field" style="margin-bottom:10px">
         <label>Kategorie / gehört zu</label>
         <select id="pos-category"></select>
         <div class="hint">Ordnet die Position einer bestehenden Leistung zu (z. B. Bodensanierung), einer eigenen Kategorie, oder „Sonstige Leistungen“.</div>
@@ -1542,15 +1547,17 @@ function restoreFromDraft(d){
 function addPosition(){
   const desc = document.getElementById('pos-desc').value.trim();
   const amt  = parseFloat(document.getElementById('pos-amt').value);
+  const detail = document.getElementById('pos-detail').value.trim();
   const catSel = document.getElementById('pos-category');
   const categoryId = catSel.value === '__new__' ? '' : catSel.value;
   if (!desc || isNaN(amt)){
     alert('Bitte Beschreibung und Betrag angeben.');
     return;
   }
-  state.positions.push({desc:desc, amt:amt, categoryId:categoryId});
+  state.positions.push({desc:desc, amt:amt, categoryId:categoryId, detail:detail});
   document.getElementById('pos-desc').value = '';
   document.getElementById('pos-amt').value = '';
+  document.getElementById('pos-detail').value = '';
   renderPositionsList();
   render();
 }
@@ -1575,8 +1582,9 @@ function renderPositionsList(){
     return;
   }
   list.innerHTML = state.positions.map(function(p, i){
+    const tooltip = p.desc + (p.detail ? ' — ' + p.detail : '');
     return '<div class="position-item">' +
-      '<div class="desc" title="' + escapeHtml(p.desc) + '">' + escapeHtml(p.desc) + '<span class="cat-badge">' + escapeHtml(categoryLabel(p.categoryId)) + '</span></div>' +
+      '<div class="desc" title="' + escapeHtml(tooltip) + '">' + escapeHtml(p.desc) + '<span class="cat-badge">' + escapeHtml(categoryLabel(p.categoryId)) + (p.detail ? ' · ' + escapeHtml(p.detail) : '') + '</span></div>' +
       '<div class="amt">' + fmt(p.amt) + '</div>' +
       '<div class="del-x" onclick="removePosition(' + i + ')" title="Entfernen">×</div>' +
     '</div>';
@@ -1862,7 +1870,7 @@ function calcTotal(){
       sections[key] = {label: label, lines:[], subtotal:0, meta:'', checkboxOn:false};
       order.push(key);
     }
-    const line = {title:p.desc, desc:'Eigene Position', amt:p.amt};
+    const line = {title:p.desc, desc: p.detail ? escapeHtml(p.detail) : '', amt:p.amt};
     sections[key].lines.push(line);
     sections[key].subtotal += p.amt;
   });
@@ -1984,7 +1992,7 @@ function render(){
     if (s.meta) svcHtml += '<div class="svc-section-meta">' + escapeHtml(s.meta) + '</div>';
     svcHtml += '<table class="calc-table" style="margin-bottom:0"><tbody>';
     s.lines.forEach(function(l){
-      svcHtml += '<tr><td><div class="pos-title">' + escapeHtml(l.title) + '</div><div class="pos-desc">' + l.desc + '</div></td><td>' + fmt(l.amt) + '</td></tr>';
+      svcHtml += '<tr><td><div class="pos-title">' + escapeHtml(l.title) + '</div>' + (l.desc ? '<div class="pos-desc">' + l.desc + '</div>' : '') + '</td><td>' + fmt(l.amt) + '</td></tr>';
     });
     svcHtml += '</tbody></table></div>';
   });
