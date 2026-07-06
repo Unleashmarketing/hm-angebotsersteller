@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8"> 
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HeinzelMänner · Angebot kalkulieren</title>
 <style>
@@ -793,6 +793,14 @@ body{
     <div class="section-title"><span class="num">0</span> Angebot &amp; Empfänger</div>
     <div class="section-box">
       <div class="field">
+        <label>Kundentyp</label>
+        <select id="meta-kundentyp">
+          <option value="privat" selected>Privatkunde</option>
+          <option value="geschaeftlich">Geschäftskunde</option>
+        </select>
+        <div class="hint">Privat: Bruttopreis (inkl. MwSt.) ist der maßgebliche Endpreis. Geschäftlich: Nettopreis ist maßgeblich, MwSt. wird zusätzlich ausgewiesen.</div>
+      </div>
+      <div class="field">
         <label>Empfänger / Anschrift</label>
         <textarea id="meta-recipient" rows="4" placeholder="Frau Maria Mustermann&#10;Hauptstraße 12&#10;69115 Heidelberg"></textarea>
       </div>
@@ -1228,7 +1236,7 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
     </div>
 
     <div class="calc-summary">
-      <div class="label">Festpreis brutto</div>
+      <div class="label" id="live-total-label">Festpreis brutto</div>
       <div class="val" id="live-total">0,00 €</div>
       <div class="breakdown" id="live-breakdown">netto · zzgl. MwSt</div>
     </div>
@@ -1273,11 +1281,12 @@ Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit
             <table class="tax-table">
               <tr><td>Zwischensumme netto</td><td id="prev-netto">0,00 €</td></tr>
               <tr id="prev-mwst-row"><td>zzgl. 19 % MwSt.</td><td id="prev-mwst">0,00 €</td></tr>
+              <tr><td>Gesamtbetrag brutto</td><td id="prev-brutto-line">0,00 €</td></tr>
             </table>
             <div class="total-box">
               <div>
                 <span class="badge">Festpreis garantiert</span>
-                <div class="label">Gesamtbetrag brutto</div>
+                <div class="label" id="prev-total-label">Gesamtbetrag brutto</div>
               </div>
               <div class="price" id="prev-total">0,00 €</div>
             </div>
@@ -1949,11 +1958,16 @@ function render(){
   const sigOn = chk('opt-signature');
   document.getElementById('page1').classList.toggle('show-signature', sigOn);
 
-  document.getElementById('live-total').textContent = fmt(calc.brutto);
+  const kundentyp = document.getElementById('meta-kundentyp').value;
+  const isGeschaeftlich = kundentyp === 'geschaeftlich';
+  const headlineAmt = isGeschaeftlich ? calc.netto : calc.brutto;
+
+  document.getElementById('live-total-label').textContent = isGeschaeftlich ? 'Festpreis netto' : 'Festpreis brutto';
+  document.getElementById('live-total').textContent = fmt(headlineAmt);
   const enabledCount = calc.orderedKeys.length;
   document.getElementById('live-breakdown').textContent =
     (enabledCount > 0 ? (enabledCount + ' Leistungsblock' + (enabledCount !== 1 ? 'e' : '') + ' aktiv · ') : 'Noch keine Leistung aktiviert · ') +
-    'netto ' + fmt(calc.netto) + ' · MwSt ' + fmt(calc.mwst) +
+    (isGeschaeftlich ? 'netto maßgeblich · brutto ' + fmt(calc.brutto) : 'brutto maßgeblich · netto ' + fmt(calc.netto)) +
     (calc.fahrten > 1 ? ' · ' + calc.fahrten + '× Anfahrt' : '') +
     (calc.eilfall ? ' · +Eilfall' : '') +
     (calc.wochenende ? ' · +Wochenende' : '') +
@@ -2023,7 +2037,11 @@ function render(){
   document.getElementById('prev-mwst-row').firstElementChild.textContent = 'zzgl. ' + settings.prices.kon_mwst_pct + ' % MwSt.';
   document.getElementById('prev-netto').textContent = fmt(calc.netto);
   document.getElementById('prev-mwst').textContent = fmt(calc.mwst);
-  document.getElementById('prev-total').innerHTML = fmt(calc.brutto) + ' <small>brutto</small>';
+  document.getElementById('prev-brutto-line').textContent = fmt(calc.brutto);
+  document.getElementById('prev-total-label').textContent = isGeschaeftlich ? 'Gesamtbetrag netto' : 'Gesamtbetrag brutto';
+  document.getElementById('prev-total').innerHTML = isGeschaeftlich
+    ? fmt(calc.netto) + ' <small>netto, zzgl. MwSt.</small>'
+    : fmt(calc.brutto) + ' <small>brutto</small>';
   document.getElementById('prev-zahlung').textContent = document.getElementById('inp-zahlung').value;
 
   const incEl = document.getElementById('prev-included');
