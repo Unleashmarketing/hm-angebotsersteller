@@ -1919,13 +1919,19 @@ function calcTotal(){
 
   let netto = subBeforeMult + multSurcharge - wert;
   const minNetto = MIN_AUFTRAG / (1 + mwstPct);
-  if (netto < minNetto && servicesSubtotal > 0) netto = minNetto;
+  let mindestAusgleich = 0;
+  if (netto < minNetto && servicesSubtotal > 0){
+    mindestAusgleich = minNetto - netto;
+    netto = minNetto;
+  }
   if (netto < 0) netto = 0;
 
+  const nettoVorRundung = netto;
   let brutto = netto * (1 + mwstPct);
   brutto = Math.round(brutto / 10) * 10;
   const finalNetto = brutto / (1 + mwstPct);
   const finalMwst = brutto - finalNetto;
+  const rundungNetto = finalNetto - nettoVorRundung;
 
   const anfahrtInfo = calcAnfahrt(fahrten);
   const infoBox = document.getElementById('anfahrt-info-box');
@@ -1934,6 +1940,7 @@ function calcTotal(){
   return {
     sections: sections, orderedKeys: orderedKeys, surchargeLines: surchargeLines, fahrten: fahrten,
     servicesSubtotal: servicesSubtotal, surchargeTotal: surchargeTotal, multSurcharge: multSurcharge, wert: wert,
+    mindestAusgleich: mindestAusgleich, rundungNetto: rundungNetto,
     eilfall: eilfall, wochenende: wochenende, mwstPct: mwstPct,
     netto: finalNetto, mwst: finalMwst, brutto: brutto
   };
@@ -2030,6 +2037,13 @@ function render(){
   }
   if (calc.wert > 0){
     surHtml += '<tr class="discount"><td><div class="pos-title">Wertanrechnung</div><div class="pos-desc">verwertbare Möbel / Geräte / Sammlerstücke</div></td><td>− ' + fmt(calc.wert) + '</td></tr>';
+  }
+  if (calc.mindestAusgleich > 0.01){
+    surHtml += '<tr class="surcharge"><td><div class="pos-title">Anpassung auf Mindestauftragswert</div><div class="pos-desc">Unser Mindestauftragswert liegt bei ' + fmt(MIN_AUFTRAG) + ' brutto</div></td><td>+ ' + fmt(calc.mindestAusgleich) + '</td></tr>';
+  }
+  if (Math.abs(calc.rundungNetto) > 0.005){
+    const rundSign = calc.rundungNetto > 0 ? '+ ' : '− ';
+    surHtml += '<tr class="' + (calc.rundungNetto > 0 ? 'surcharge' : 'discount') + '"><td><div class="pos-title">Rundung auf glatten Gesamtbetrag</div><div class="pos-desc">Kaufmännische Rundung auf volle 10 €</div></td><td>' + rundSign + fmt(Math.abs(calc.rundungNetto)) + '</td></tr>';
   }
   if (surHtml){ surWrap.style.display = ''; surTbody.innerHTML = surHtml; }
   else        { surWrap.style.display = 'none'; surTbody.innerHTML = ''; }
