@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeinzelMänner · Einstellungen &amp; Übersicht</title>
+<title>HeinzelMänner · Angebot kalkulieren</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700;8..60,800&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
 
@@ -13,7 +13,7 @@
   --accent:#9C6B2E;
   --accent-dark:#7C5322;
   --accent-soft:#F1E7D6;
-  --cream:#FFFFFF;
+  --cream:#FBFAF6;
   --warm-grey:#DAD5C9;
   --text:#20262B;
   --text-muted:#5C6670;
@@ -25,668 +25,2116 @@
   --font-body:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono:'IBM Plex Mono', 'SF Mono', monospace;
 }
+
 *{box-sizing:border-box;margin:0;padding:0}
 body{
   font-family:var(--font-body);
-  background:#E9E6DE;
+  background:#DAD6CB;
   color:var(--text);
-  min-height:100vh;
-}
-.wrap{
-  max-width:920px;
-  margin:0 auto;
-  padding:0 0 60px;
-}
-.topbar{
-  background:var(--navy);
-  color:#fff;
-  padding:20px 32px;
+  height:100vh;
   display:flex;
-  align-items:center;
-  gap:16px;
-  border-bottom:2px solid var(--accent);
-  position:sticky;
-  top:0;
-  z-index:10;
-}
-.topbar img{width:40px;height:40px;flex-shrink:0}
-.topbar h1{font-family:var(--font-display);font-size:1.3rem;font-weight:700;letter-spacing:-0.01em}
-.topbar .sub{font-family:var(--font-mono);font-size:0.68rem;color:#9FA9B2;text-transform:uppercase;letter-spacing:0.12em;margin-top:3px}
-.topbar .new-btn{
-  margin-left:auto;
-  background:var(--accent);
-  color:#fff;
-  text-decoration:none;
-  font-weight:600;
-  font-size:0.78rem;
-  letter-spacing:0.05em;
-  text-transform:uppercase;
-  padding:11px 20px;
-  border-radius:var(--radius);
-  white-space:nowrap;
-  transition:background .15s;
-}
-.topbar .new-btn:hover{background:var(--accent-dark)}
-
-.content{padding:28px 24px 0}
-
-.card{
-  background:var(--cream);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  margin-bottom:16px;
   overflow:hidden;
 }
-.card-head{
-  padding:15px 22px;
-  background:transparent;
-  border-bottom:1px solid var(--border);
+
+@page{
+  size:A4 portrait;
+  margin:16mm 20mm 14mm 20mm;
+}
+
+.editor-panel{
+  width:460px;
+  background:var(--cream);
+  padding:0;
+  border-right:1px solid var(--border);
+  overflow-y:auto;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
+.editor-head{
+  position:sticky;
+  top:0;
+  background:var(--navy);
+  color:#fff;
+  padding:16px 22px;
+  z-index:5;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  cursor:pointer;
-  user-select:none;
+  gap:12px;
+  border-bottom:2px solid var(--accent);
 }
-.card-head h2{
-  font-family:var(--font-display);
-  font-size:1.02rem;
+.editor-head .logo-svg{width:34px;height:34px;flex-shrink:0}
+.editor-head h1{font-family:var(--font-display);font-size:1.05rem;font-weight:600;letter-spacing:-0.005em}
+.editor-head .sub{font-family:var(--font-mono);font-size:0.66rem;color:#9FA9B2;text-transform:uppercase;letter-spacing:0.1em;margin-top:3px}
+.editor-head .back{
+  margin-left:auto;
+  color:#fff;
+  font-size:0.72rem;
   font-weight:600;
-  color:var(--navy);
-  letter-spacing:-0.005em;
-}
-.card-head .chev{color:var(--text-muted);font-family:var(--font-mono);font-size:0.8rem;transition:transform .2s}
-.card.expanded .card-head .chev{transform:rotate(180deg)}
-.card-body{display:none;padding:20px 22px 24px}
-.card.expanded .card-body{display:block}
-.card.static .card-body{display:block}
-.card.static .card-head{cursor:default}
-.card.static .card-head .chev{display:none}
-
-.field-grid{
-  display:grid;
-  grid-template-columns:1fr 130px 74px;
-  gap:10px;
-  align-items:center;
-  padding:7px 0;
-  border-bottom:1px solid #EFEBE2;
-}
-.field-grid:last-child{border-bottom:none}
-.field-grid label{font-size:0.87rem;font-weight:500;color:var(--text)}
-.field-grid input{
-  width:100%;
-  padding:7px 10px;
-  border:1px solid var(--border);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,0.3);
+  padding:7px 12px;
   border-radius:3px;
-  font-family:var(--font-mono);
-  font-size:0.86rem;
-  text-align:right;
-  background:#FBFAF7;
-  color:var(--navy);
 }
-.field-grid input:focus{outline:none;border-color:var(--accent);background:#fff}
-.field-grid .unit{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted)}
+.editor-head .back:hover{background:rgba(255,255,255,0.08)}
 
-.company-field{margin-bottom:14px}
-.company-field label{
+.editor-body{padding:18px 22px 28px}
+
+.section-title{
+  color:var(--navy);
+  font-family:var(--font-display);
+  font-size:1rem;
+  font-weight:600;
+  margin:26px 0 12px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:baseline;
+  gap:9px;
+}
+.section-title:first-child{margin-top:6px}
+.section-title .num{
+  font-family:var(--font-mono);
+  color:var(--accent-dark);
+  font-size:0.72rem;
+  font-weight:600;
+  letter-spacing:0.02em;
+}
+.section-title .num::before{content:"["}
+.section-title .num::after{content:"]"}
+
+.section-box{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:15px 16px;
+  margin-bottom:14px;
+}
+
+.field{margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+.field label{
   display:block;
   font-size:0.68rem;
   font-weight:600;
   text-transform:uppercase;
-  letter-spacing:0.08em;
+  letter-spacing:0.07em;
   color:var(--text-muted);
   margin-bottom:6px;
 }
-.company-field input{
+.field input[type=text],
+.field input[type=number],
+.field input[type=date],
+.field textarea,
+.field select{
   width:100%;
   padding:9px 11px;
   border:1px solid var(--border);
   border-radius:3px;
   font-family:var(--font-body);
-  font-size:0.9rem;
+  font-size:0.86rem;
   background:#FBFAF7;
+  color:var(--text);
+  transition:border-color 0.15s,background 0.15s;
 }
-.company-field input:focus{outline:none;border-color:var(--accent);background:#fff}
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field input:focus,.field textarea:focus,.field select:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:#fff;
+}
+.field textarea{resize:vertical;min-height:80px;line-height:1.45;font-size:0.84rem}
+.field .hint{font-size:0.72rem;color:var(--text-muted);margin-top:5px}
 
-.cat-list{display:flex;flex-direction:column;gap:1px;margin-bottom:16px;border:1px solid var(--border);border-radius:3px;overflow:hidden}
-.cat-item{
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+.checkbox{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:0.85rem;
+  font-weight:500;
+  color:var(--navy);
+  cursor:pointer;
+  margin-bottom:9px;
+}
+.checkbox input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
+
+.price-row{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-top:5px;
+  margin-bottom:3px;
+}
+.price-row label{
+  font-family:var(--font-mono);
+  font-size:0.64rem;
+  color:var(--text-muted);
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  white-space:nowrap;
+}
+.price-row input{
+  width:66px;
+  padding:5px 7px;
+  border:1px solid var(--navy);
+  border-radius:2px;
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  font-weight:600;
+  text-align:right;
+  background:var(--navy);
+  color:var(--accent-soft);
+}
+.price-row input:focus{outline:none;background:var(--navy-dark)}
+.price-row .unit{font-family:var(--font-mono);font-size:0.66rem;color:var(--text-muted)}
+
+.services-stack{display:flex;flex-direction:column;gap:8px}
+.service-block{
+  background:#fff;
+  border:1px solid var(--border);
+  border-left:3px solid var(--border);
+  border-radius:3px;
+  overflow:hidden;
+  transition:border-color .15s;
+}
+.service-block.enabled{
+  border-left-color:var(--accent);
+}
+.service-head{
   display:flex;
   align-items:center;
   justify-content:space-between;
+  padding:12px 14px;
   background:#fff;
-  border-bottom:1px solid var(--border);
-  padding:10px 14px;
-  font-size:0.87rem;
-  font-weight:500;
+  cursor:pointer;
+  user-select:none;
+  gap:10px;
+  transition:background .15s;
+}
+.service-head:hover{background:#FAF9F5}
+.service-checkbox{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  cursor:pointer;
+  flex:1;
+  min-width:0;
+}
+.service-checkbox input{
+  width:16px;height:16px;
+  accent-color:var(--accent);
+  cursor:pointer;
+  flex-shrink:0;
+}
+.service-icon{
+  width:20px;height:20px;
+  stroke:var(--text-muted);
+  stroke-width:1.6;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  flex-shrink:0;
+}
+.service-block.enabled .service-icon{stroke:var(--accent-dark)}
+.service-name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:0.94rem;
   color:var(--navy);
 }
-.cat-item:last-child{border-bottom:none}
-.cat-item.fixed{color:var(--text-muted)}
-.cat-item .tag{
-  font-family:var(--font-mono);
-  font-size:0.62rem;
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:0.06em;
-  color:var(--accent-dark);
-  border:1px solid var(--accent-soft);
-  padding:2px 7px;
-  border-radius:2px;
-  margin-left:10px;
+.service-info{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
 }
-.cat-item .del-x{color:var(--danger);cursor:pointer;font-weight:bold;font-size:1.1rem;padding:0 4px;line-height:1}
-.cat-item .del-x:hover{opacity:0.6}
-.cat-add{display:flex;gap:8px}
-.cat-add input{
-  flex:1;
-  padding:9px 11px;
-  border:1px solid var(--border);
-  border-radius:3px;
-  font-family:var(--font-body);
-  font-size:0.87rem;
+.service-subtotal{
+  font-family:var(--font-mono);
+  font-weight:600;
+  color:var(--accent-dark);
+  font-size:0.84rem;
+  min-width:60px;
+  text-align:right;
+}
+.service-subtotal.empty{color:var(--text-muted);font-weight:400;font-size:0.76rem}
+.service-toggle{
+  color:var(--text-muted);
+  font-size:0.8rem;
+  width:18px;
+  transition:transform .2s;
+}
+.service-block.expanded .service-toggle{transform:rotate(180deg)}
+.service-body{
+  display:none;
+  padding:14px 16px;
+  border-top:1px solid var(--border);
   background:#FBFAF7;
 }
-.cat-add input:focus{outline:none;border-color:var(--accent);background:#fff}
+.service-block.expanded .service-body{display:block}
+.service-block:not(.enabled) .service-body{opacity:0.6}
+.svc-hint{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  color:var(--text-muted);
+  margin-top:6px;
+  margin-bottom:12px;
+}
+.svc-hint strong{color:var(--accent-dark);font-weight:600}
+
+.calc-summary{
+  background:var(--navy);
+  color:#fff;
+  border-radius:var(--radius);
+  padding:16px 18px;
+  margin-top:10px;
+  border-top:2px solid var(--accent);
+}
+.calc-summary .label{font-family:var(--font-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:#9FA9B2;font-weight:500}
+.calc-summary .val{font-family:var(--font-display);font-size:1.75rem;font-weight:700;letter-spacing:-0.01em;margin-top:3px}
+.calc-summary .breakdown{font-size:0.76rem;color:#9FA9B2;margin-top:7px;line-height:1.5}
 
 .btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:6px;
-  padding:10px 18px;
-  border:1px solid transparent;
-  border-radius:var(--radius);
+  padding:10px 14px;
+  border:none;
+  border-radius:6px;
   font-family:var(--font-body);
   font-weight:600;
-  font-size:0.78rem;
+  font-size:0.76rem;
   text-transform:uppercase;
-  letter-spacing:0.06em;
+  letter-spacing:0.05em;
   cursor:pointer;
-  transition:background 0.15s, border-color 0.15s;
+  transition:background 0.15s;
   color:#fff;
+  width:100%;
 }
 .btn-add{background:var(--navy)}
 .btn-add:hover{background:var(--navy-dark)}
-.btn-save{background:var(--accent);font-size:0.82rem;padding:14px 22px;width:100%;margin-top:8px}
+.btn-save{background:var(--accent);margin-top:20px;font-size:0.8rem;padding:14px}
 .btn-save:hover{background:var(--accent-dark)}
-.btn-reset{
-  background:transparent;
-  color:var(--danger);
-  border:1px solid var(--danger);
-  font-size:0.72rem;
-  padding:8px 14px;
-}
-.btn-reset:hover{background:#F7EEEC}
+.btn-print{background:transparent;color:var(--navy);border:1px solid var(--navy);margin-top:8px;font-size:0.8rem;padding:14px}
+.btn-print:hover{background:var(--navy);color:#fff}
 
-.hint{font-size:0.78rem;color:var(--text-muted);margin-bottom:14px;line-height:1.5}
-
-.drafts-list{display:flex;flex-direction:column;gap:1px;border:1px solid var(--border);border-radius:3px;overflow:hidden}
-.draft-item{
-  display:flex;
+.positions-list{margin-bottom:10px}
+.position-item{
+  display:grid;
+  grid-template-columns:1fr 90px 26px;
+  gap:8px;
   align-items:center;
-  gap:14px;
   background:#fff;
-  border-bottom:1px solid var(--border);
-  padding:13px 16px;
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:9px 10px;
+  margin-bottom:5px;
+  font-size:0.82rem;
 }
-.draft-item:last-child{border-bottom:none}
-.draft-item .info{flex:1;min-width:0}
-.draft-item .name{font-family:var(--font-display);font-weight:600;color:var(--navy);font-size:0.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.draft-item .meta{font-size:0.74rem;color:var(--text-muted);margin-top:2px}
-.draft-item .total{font-family:var(--font-mono);font-weight:600;color:var(--accent-dark);font-size:0.92rem;white-space:nowrap}
-.draft-item .actions{display:flex;gap:6px;flex-shrink:0}
-.draft-item a.open-btn{
-  background:var(--navy);
-  color:#fff;
-  text-decoration:none;
-  font-size:0.72rem;
-  font-weight:600;
+.position-item .desc{font-weight:500;color:var(--navy);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.position-item .desc .cat-badge{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:0.62rem;
+  font-weight:500;
+  color:var(--accent-dark);
   text-transform:uppercase;
   letter-spacing:0.04em;
-  padding:8px 12px;
-  border-radius:3px;
-  white-space:nowrap;
+  margin-top:2px;
 }
-.draft-item a.open-btn:hover{background:var(--navy-dark)}
-.draft-item .del-btn{
-  background:transparent;
+.position-item .amt{text-align:right;font-family:var(--font-mono);font-weight:600;color:var(--navy)}
+.position-item .del-x{
   color:var(--danger);
-  border:1px solid var(--danger);
-  font-size:0.72rem;
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:0.04em;
-  padding:8px 10px;
-  border-radius:3px;
   cursor:pointer;
-}
-.draft-item .del-btn:hover{background:#F7EEEC}
-.empty-state{
+  font-weight:bold;
+  font-size:1.05rem;
   text-align:center;
-  color:var(--text-muted);
-  font-style:italic;
-  font-size:0.85rem;
-  padding:28px 0;
-  border:1px dashed var(--border);
-  border-radius:3px;
+  user-select:none;
 }
+.position-item .del-x:hover{opacity:0.6}
 
-#flash-msg{
-  position:fixed;top:20px;left:50%;transform:translateX(-50%);
-  background:var(--navy);color:#fff;padding:11px 22px;border-radius:3px;
-  font-weight:600;font-size:0.82rem;letter-spacing:0.02em;z-index:9999;
-  border-left:3px solid var(--success);
-  transition:opacity 0.3s;opacity:0;pointer-events:none;
+.anfahrt-info{
+  background:#F5F3ED;
+  border:1px solid var(--border);
+  border-left:2px solid var(--accent);
+  border-radius:2px;
+  padding:9px 11px;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--navy);
+  margin-top:7px;
+  line-height:1.6;
 }
+.anfahrt-info strong{font-weight:600}
 
-.btn-settings{
-  margin-left:auto;
-  background:transparent;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.3);
-  font-family:var(--font-body);
-  font-weight:600;
-  font-size:0.78rem;
-  letter-spacing:0.05em;
-  text-transform:uppercase;
-  padding:10px 18px;
-  border-radius:var(--radius);
-  cursor:pointer;
-  transition:background .15s;
-}
-.btn-settings:hover{background:rgba(255,255,255,0.08)}
-
-/* ========== EINSTELLUNGEN-MODAL ========== */
-.modal-overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(16,20,24,0.55);
-  z-index:1000;
-  align-items:center;
-  justify-content:center;
-  padding:32px;
-}
-.modal-overlay.open{display:flex}
-.modal{
-  background:var(--cream);
-  width:100%;
-  max-width:860px;
-  height:82vh;
-  max-height:720px;
-  border-radius:var(--radius);
+.preview-panel{
+  flex-grow:1;
+  padding:32px 24px;
+  overflow-y:auto;
   display:flex;
   flex-direction:column;
-  overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,0.35);
-}
-.modal-header{
-  background:var(--navy);
-  color:#fff;
-  padding:16px 22px;
-  display:flex;
   align-items:center;
-  justify-content:space-between;
-  border-bottom:2px solid var(--accent);
-  flex-shrink:0;
+  gap:24px;
 }
-.modal-header h2{font-family:var(--font-display);font-size:1.1rem;font-weight:600}
-.modal-close{
-  background:none;
-  border:none;
-  color:#fff;
-  font-size:1.4rem;
-  line-height:1;
-  cursor:pointer;
-  padding:0 4px;
-  opacity:0.8;
-}
-.modal-close:hover{opacity:1}
-.modal-body{
-  flex:1;
-  display:flex;
-  overflow:hidden;
-  min-height:0;
-}
-.modal-nav{
-  width:210px;
-  flex-shrink:0;
-  background:#F3F1EC;
-  border-right:1px solid var(--border);
-  overflow-y:auto;
-  padding:10px 0;
-}
-.modal-nav-item{
+.a4-page{
+  width:210mm;
+  min-height:297mm;
+  background:#fff;
+  padding:18mm 20mm 12mm;
+  box-shadow:0 2px 24px rgba(0,0,0,0.16);
+  box-sizing:border-box;
+  position:relative;
   display:block;
-  width:100%;
-  text-align:left;
-  background:none;
-  border:none;
-  border-left:3px solid transparent;
-  padding:10px 18px;
-  font-family:var(--font-body);
-  font-size:0.83rem;
-  font-weight:500;
-  color:var(--text-muted);
-  cursor:pointer;
-}
-.modal-nav-item:hover{background:#EAE7DE;color:var(--navy)}
-.modal-nav-item.active{
-  border-left-color:var(--accent);
-  background:#fff;
-  color:var(--navy);
-  font-weight:600;
-}
-.modal-panels{
-  flex:1;
-  overflow-y:auto;
-  padding:22px 26px;
-}
-.modal-panel{display:none}
-.modal-panel.active{display:block}
-.modal-panel h3{
-  font-family:var(--font-display);
-  font-size:1.05rem;
-  font-weight:600;
-  color:var(--navy);
-  margin-bottom:16px;
-  padding-bottom:10px;
-  border-bottom:1px solid var(--border);
-}
-.modal-footer{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:14px 22px;
-  border-top:1px solid var(--border);
-  background:#fff;
+  page-break-after:always;
   flex-shrink:0;
+  font-size:10pt;
+  line-height:1.45;
+  color:#20262B;
 }
-.modal-footer-spacer{flex:1}
-.btn-ghost{
-  background:transparent;
-  color:var(--navy);
-  border:1px solid var(--border);
-  padding:10px 18px;
+
+.page-frame{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:auto;
 }
-.btn-ghost:hover{background:#F3F1EC}
+.page-frame > tbody > tr > td,
+.page-frame > tfoot > tr > td{
+  padding:0;
+  border:none;
+  vertical-align:top;
+}
+.page-frame > tfoot > tr > td.page-foot{
+  padding-top:5mm;
+}
+
+.print-logo{
+  position:absolute;
+  top:14mm;
+  right:20mm;
+  width:30mm;
+  height:30mm;
+  z-index:5;
+}
+
+.sender-line{
+  font-family:var(--font-mono);
+  font-size:6.5pt;
+  color:#5C6670;
+  border-bottom:0.5px solid #C9C3B5;
+  padding-bottom:1mm;
+  margin-bottom:5mm;
+  letter-spacing:0.03em;
+  width:90mm;
+}
+
+.address-box{
+  font-size:11pt;
+  line-height:1.5;
+  margin-bottom:14mm;
+  min-height:30mm;
+  white-space:pre-line;
+}
+
+.meta-table{
+  width:75mm;
+  font-family:var(--font-mono);
+  font-size:8.5pt;
+  margin-left:auto;
+  margin-bottom:8mm;
+  margin-top:-30mm;
+  border-collapse:collapse;
+}
+.meta-table td{padding:1mm 0}
+.meta-table td:first-child{color:#5C6670;width:32mm}
+.meta-table td:last-child{font-weight:600;color:#1C2B36;text-align:right}
+
+.doc-title{
+  font-family:var(--font-display);
+  font-size:19pt;
+  font-weight:700;
+  color:#1C2B36;
+  margin-bottom:3mm;
+  letter-spacing:-0.01em;
+}
+.doc-subtitle{
+  font-family:var(--font-mono);
+  font-size:8.5pt;
+  color:#7C5322;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  padding-bottom:2mm;
+  border-bottom:1px solid #DCD7CC;
+  margin-bottom:6mm;
+}
+
+.intro-text{
+  font-size:10pt;
+  line-height:1.6;
+  white-space:pre-wrap;
+  margin-bottom:8mm;
+}
+
+.object-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:0;
+  border:1px solid #DCD7CC;
+  border-radius:2px;
+  margin-bottom:6mm;
+  overflow:hidden;
+  font-size:9pt;
+}
+.object-grid > div{
+  padding:3mm 4mm;
+  border-right:1px solid #DCD7CC;
+  border-bottom:1px solid #DCD7CC;
+}
+.object-grid > div:nth-child(3n){border-right:none}
+.object-grid > div:nth-last-child(-n+3){border-bottom:none}
+.object-grid .lbl{
+  font-family:var(--font-mono);
+  font-size:6.5pt;
+  text-transform:uppercase;
+  letter-spacing:0.07em;
+  color:#5C6670;
+  font-weight:500;
+}
+.object-grid .val{font-weight:600;color:#1C2B36;font-size:10pt;margin-top:1mm}
+
+.svc-section{
+  margin:0 0 7mm;
+  break-inside:avoid;
+  page-break-inside:avoid;
+}
+.svc-section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  border-bottom:1.5px solid #1C2B36;
+  padding-bottom:1.5mm;
+  margin-bottom:2mm;
+}
+.svc-section-title{
+  font-family:var(--font-display);
+  font-size:12pt;
+  font-weight:600;
+  color:#1C2B36;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+}
+.svc-section-sub{
+  font-family:var(--font-mono);
+  font-size:7.5pt;
+  color:#7C5322;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+.svc-section-meta{
+  font-size:8.5pt;
+  color:#5C6670;
+  margin-bottom:2mm;
+  line-height:1.5;
+}
+.svc-section-meta strong{color:#1C2B36}
+
+.surcharge-head{
+  padding:2.5mm 0;
+  margin:5mm 0 2mm;
+  font-family:var(--font-mono);
+  font-size:8pt;
+  font-weight:600;
+  color:#1C2B36;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  border-bottom:1.5px solid #1C2B36;
+}
+
+.calc-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:5mm;
+  font-size:9.5pt;
+}
+.calc-table th{
+  background:#F5F3ED;
+  color:#5C6670;
+  font-family:var(--font-mono);
+  font-weight:600;
+  text-align:left;
+  padding:2.5mm 4mm;
+  font-size:7.5pt;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  border-bottom:1px solid #1C2B36;
+}
+.calc-table th:last-child{text-align:right}
+.calc-table td{
+  padding:2.6mm 4mm;
+  border-bottom:0.5px solid #DCD7CC;
+  vertical-align:top;
+}
+.calc-table td:last-child{
+  text-align:right;
+  font-family:var(--font-mono);
+  white-space:nowrap;
+  font-weight:600;
+}
+.calc-table .pos-title{font-weight:600;color:#1C2B36}
+.calc-table .pos-desc{font-size:8pt;color:#5C6670;margin-top:0.5mm}
+.calc-table tr.subtotal td{
+  border-top:1px solid #1C2B36;
+  border-bottom:none;
+  padding-top:3mm;
+  font-weight:700;
+}
+.calc-table tr.discount td{color:#4B6B4E}
+.calc-table tr.surcharge td{color:#7C5322}
+
+.total-box{
+  background:#1C2B36;
+  color:#fff;
+  border-radius:2px;
+  border-top:2px solid #9C6B2E;
+  padding:5mm 6mm;
+  margin:4mm 0 6mm;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.total-box .label{font-family:var(--font-mono);font-size:8pt;text-transform:uppercase;letter-spacing:0.09em;color:#9FA9B2;font-weight:500}
+.total-box .price{font-family:var(--font-display);font-size:22pt;font-weight:700;letter-spacing:-0.01em;color:#fff}
+.total-box .price small{font-family:var(--font-body);font-size:9pt;font-weight:500;color:#9FA9B2;margin-left:5mm}
+.total-box .badge{
+  color:#D9BE93;
+  font-family:var(--font-mono);
+  padding:0;
+  font-size:7.5pt;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  display:inline-block;
+  margin-bottom:2mm;
+}
+
+.tax-table{
+  width:60mm;
+  margin-left:auto;
+  font-family:var(--font-mono);
+  font-size:8.5pt;
+  border-collapse:collapse;
+  margin-top:-3mm;
+  margin-bottom:6mm;
+}
+.tax-table td{padding:1mm 0}
+.tax-table td:last-child{text-align:right;font-weight:600}
+
+.included{
+  background:#FAF7F0;
+  border-left:2px solid #9C6B2E;
+  border-radius:0;
+  padding:4mm 5mm;
+  margin-bottom:6mm;
+}
+.included h3{
+  font-family:var(--font-mono);
+  font-size:8pt;
+  color:#1C2B36;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  margin-bottom:2mm;
+}
+.included ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:1mm 4mm;font-size:8.5pt}
+.included li{padding-left:5mm;position:relative;line-height:1.4}
+.included li::before{
+  content:"✓";
+  position:absolute;
+  left:0;
+  color:#4B6B4E;
+  font-weight:bold;
+}
+
+.zahlung{
+  font-size:8.5pt;
+  color:#5C6670;
+  line-height:1.5;
+  margin-bottom:6mm;
+  white-space:pre-wrap;
+}
+
+.doc-footer{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:6mm;
+  font-family:var(--font-mono);
+  font-size:6.5pt;
+  color:#5C6670;
+  border-top:0.5px solid #DCD7CC;
+  padding-top:2mm;
+  line-height:1.6;
+}
+.doc-footer strong{color:#1C2B36;display:block;margin-bottom:0.5mm;font-weight:600}
+
+.signature-row{
+  display:none;
+  grid-template-columns:1fr 1fr;
+  gap:10mm;
+  margin-top:10mm;
+  margin-bottom:8mm;
+  font-size:8pt;
+  color:#5C6670;
+}
+.show-signature .signature-row{display:grid}
+.signature-row .sig{border-top:1px solid #20262B;padding-top:1mm}
+
+@media print{
+  html, body{
+    background:white;
+    margin:0;
+    padding:0;
+    height:auto;
+    width:auto;
+    overflow:visible;
+    display:block;
+  }
+  .editor-panel,
+  .no-print,
+  #flash-msg{
+    display:none !important;
+  }
+  .preview-panel{
+    padding:0;
+    margin:0;
+    background:white;
+    overflow:visible;
+    display:block;
+    width:100%;
+    gap:0;
+  }
+  .a4-page{
+    box-shadow:none;
+    margin:0;
+    padding:0;
+    width:auto;
+    min-height:0;
+    display:block;
+    overflow:visible;
+    position:relative;
+  }
+  .print-logo{
+    position:absolute;
+    top:0;
+    right:0;
+    width:30mm;
+    height:30mm;
+  }
+  .page-frame{width:100%}
+  .calc-table thead{display:table-header-group}
+  .page-frame > tfoot{display:table-footer-group}
+  .object-grid,
+  .total-box,
+  .included,
+  .signature-row,
+  .tax-table,
+  .meta-table,
+  .doc-footer{
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  .calc-table tr{
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  h1, h2, h3, .doc-title, .doc-subtitle, .included h3{
+    page-break-after:avoid;
+    break-after:avoid;
+  }
+  p, .intro-text, .zahlung{
+    orphans:3;
+    widows:3;
+  }
+  *{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+    color-adjust:exact !important;
+  }
+}
+
+@media (max-width: 1100px){
+  body{flex-direction:column;height:auto;overflow:auto}
+  .editor-panel{width:100%;max-height:none}
+  .preview-panel{padding:20px}
+  .a4-page{transform-origin:top center}
+}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <img src="HM Logo.svg" alt="HeinzelMänner Logo">
-  <div>
-    <h1>Übersicht</h1>
-    <div class="sub">HeinzelMänner Angebotstool</div>
+<aside class="editor-panel">
+  <div class="editor-head">
+    <img class="logo-svg" id="logo-editor" src="HM Logo.svg" alt="Logo">
+    <div>
+      <h1>Angebot kalkulieren</h1>
+      <div class="sub" id="hdr-offer-id">AG-···-2026</div>
+    </div>
+    <a href="index.html" class="back" title="Zurück zur Übersicht">← Übersicht</a>
   </div>
-  <button class="btn-settings" onclick="openSettings()">Einstellungen</button>
-  <a href="angebot.html" class="new-btn">+ Neues Angebot</a>
-</div>
 
-<div class="wrap">
-  <div class="content">
+  <div class="editor-body">
 
-    <!-- ========== ENTWÜRFE ========== -->
-    <div class="card expanded static">
-      <div class="card-head"><h2>Entwürfe</h2></div>
-      <div class="card-body">
-        <div class="drafts-list" id="drafts-list"></div>
+    <div class="section-title"><span class="num">0</span> Angebot &amp; Empfänger</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Kundentyp</label>
+        <select id="meta-kundentyp">
+          <option value="privat" selected>Privatkunde</option>
+          <option value="geschaeftlich">Geschäftskunde</option>
+        </select>
+        <div class="hint">Privat: Bruttopreis (inkl. MwSt.) ist der maßgebliche Endpreis. Geschäftlich: Nettopreis ist maßgeblich, MwSt. wird zusätzlich ausgewiesen.</div>
+      </div>
+      <div class="field">
+        <label>Empfänger / Anschrift</label>
+        <textarea id="meta-recipient" rows="4" placeholder="Frau Maria Mustermann&#10;Hauptstraße 12&#10;69115 Heidelberg"></textarea>
+      </div>
+      <div class="field">
+        <label>Anlass / Bezeichnung</label>
+        <input type="text" id="meta-event" placeholder="z. B. Wohnungsauflösung Nachlass">
+      </div>
+      <div class="field">
+        <label>Objekt-Adresse</label>
+        <input type="text" id="meta-location" placeholder="Hauptstraße 12, 69115 Heidelberg">
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>Wunschtermin</label>
+          <input type="date" id="meta-date">
+        </div>
+        <div class="field">
+          <label>Reserviert bis</label>
+          <input type="date" id="meta-valid-until">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>Angebotsnummer</label>
+          <input type="text" id="meta-offer-id">
+        </div>
+        <div class="field">
+          <label>Sachbearbeiter</label>
+          <input type="text" id="meta-clerk" placeholder="z. B. Sascha Heck">
+        </div>
       </div>
     </div>
 
-  </div>
-</div>
+    <div class="section-title"><span class="num">1</span> Anschreiben</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Anrede</label>
+        <input type="text" id="inp-greeting" value="Sehr geehrte Damen und Herren,">
+      </div>
+      <div class="field">
+        <label>Einleitungstext</label>
+        <textarea id="inp-intro">vielen Dank für Ihre Anfrage und Ihr Vertrauen.
 
-<!-- ========== EINSTELLUNGEN-MODAL ========== -->
-<div class="modal-overlay" id="settings-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>Einstellungen</h2>
-      <button class="modal-close" onclick="closeSettings()" aria-label="Schließen">×</button>
-    </div>
-    <div class="modal-body">
-      <nav class="modal-nav" id="modal-nav"></nav>
-      <div class="modal-panels" id="modal-panels">
-        <div class="modal-panel" data-panel="company">
-          <h3>Firmendaten</h3>
-          <div class="row-2">
-            <div class="company-field"><label>Firmenname</label><input type="text" id="comp-name"></div>
-            <div class="company-field"><label>Geschäftsführer</label><input type="text" id="comp-gf"></div>
-          </div>
-          <div class="row-2">
-            <div class="company-field"><label>Straße</label><input type="text" id="comp-strasse"></div>
-            <div class="company-field"><label>PLZ / Ort</label><input type="text" id="comp-plzort"></div>
-          </div>
-          <div class="row-2">
-            <div class="company-field"><label>Telefon</label><input type="text" id="comp-tel"></div>
-            <div class="company-field"><label>Mobil</label><input type="text" id="comp-mobil"></div>
-          </div>
-          <div class="row-2">
-            <div class="company-field"><label>E-Mail</label><input type="text" id="comp-email"></div>
-            <div class="company-field"><label>USt-IdNr.</label><input type="text" id="comp-ustid"></div>
-          </div>
-          <div class="company-field"><label>Logo-Datei (Pfad/Dateiname)</label><input type="text" id="comp-logo"></div>
-        </div>
+Anbei erhalten Sie unser unverbindliches Festpreisangebot für die im Folgenden beschriebenen Leistungen. Der genannte Preis ist ein verbindlicher Festpreis und wird nicht überschritten – es entstehen keine versteckten Zusatzkosten.
 
-        <div class="modal-panel" data-panel="categories">
-          <h3>Kategorien für eigene Positionen</h3>
-          <p class="hint">Die 5 Leistungsarten sind fest vorgegeben. Eigene Kategorien kannst du frei anlegen und wieder entfernen — sie stehen dann im Angebotsersteller bei „Eigene Positionen“ zur Auswahl.</p>
-          <div class="cat-list" id="cat-list"></div>
-          <div class="cat-add">
-            <input type="text" id="cat-new-input" placeholder="z. B. Elektroarbeiten">
-            <button class="btn btn-add" style="width:auto" onclick="handleAddCategory()">+ Hinzufügen</button>
-          </div>
-        </div>
-
-        <!-- Preisgruppen-Panels werden hier dynamisch eingefügt -->
+Wir freuen uns auf Ihre Rückmeldung und stehen Ihnen für Rückfragen jederzeit gerne zur Verfügung.</textarea>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-reset" onclick="handleReset()">Werkseinstellungen wiederherstellen</button>
-      <div class="modal-footer-spacer"></div>
-      <button class="btn btn-ghost" onclick="closeSettings()">Schließen</button>
-      <button class="btn btn-save" style="width:auto" onclick="handleSaveAll()">Speichern</button>
-    </div>
-  </div>
-</div>
 
-<div id="flash-msg"></div>
+    <div class="section-title"><span class="num">2</span> Leistungen</div>
+    <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;font-style:italic">Aktiviere die benötigten Leistungen per Häkchen. Klick auf den Titel öffnet/schließt das Feld. Preise (orange umrahmt) sind für dieses Angebot frei einstellbar — Standardwerte kommen aus den <a href="index.html" style="color:var(--accent-dark)">Einstellungen</a>.</p>
+
+    <div class="services-stack">
+
+      <div class="service-block" data-svc="entr">
+        <div class="service-head" data-svc-head>
+          <label class="service-checkbox" onclick="event.stopPropagation()">
+            <input type="checkbox" id="svc-entr-enabled" data-svc-toggle="entr">
+            <svg class="service-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4-4h10l4 4v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 11h18"/><path d="M9 16h6"/></svg>
+            <span class="service-name">Entrümpelung</span>
+          </label>
+          <div class="service-info">
+            <span class="service-subtotal empty" id="svc-entr-sub">—</span>
+            <span class="service-toggle">▾</span>
+          </div>
+        </div>
+        <div class="service-body">
+          <div class="svc-hint">m² × Faktor (je Typ) × Möblierung → m³ × Grundpreis</div>
+          <div class="field">
+            <label>Objekttyp</label>
+            <select id="entr-type">
+              <option value="1zi"  data-factor="0.35">1-Zimmer-Wohnung</option>
+              <option value="2zi"  data-factor="0.36">2-Zimmer-Wohnung</option>
+              <option value="3zi"  data-factor="0.38" selected>3-Zimmer-Wohnung</option>
+              <option value="4zi"  data-factor="0.40">4-Zimmer-Wohnung</option>
+              <option value="5zi"  data-factor="0.42">5+ Zimmer / Maisonette</option>
+              <option value="efh"  data-factor="0.45">Einfamilienhaus</option>
+              <option value="mfh"  data-factor="0.48">Mehrfamilienhaus</option>
+              <option value="kel"  data-factor="0.60">Nur Keller</option>
+              <option value="dach" data-factor="0.55">Nur Dachboden</option>
+              <option value="gar"  data-factor="0.50">Nur Garage</option>
+              <option value="gew"  data-factor="0.32">Gewerbe / Büro / Lager</option>
+              <option value="sonst" data-factor="0.40">Sonstiges</option>
+            </select>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Wohnfläche m²</label>
+              <input type="number" id="entr-qm" min="0" step="1" value="75">
+              <div class="hint">→ ca. <span id="entr-vol-out">29</span> m³</div>
+            </div>
+            <div class="field">
+              <label>Möblierungsgrad</label>
+              <select id="entr-furnish">
+                <option value="0.6">Leicht (× 0,6)</option>
+                <option value="1.0" selected>Normal (× 1,0)</option>
+                <option value="1.4">Voll (× 1,4)</option>
+                <option value="1.85">Messi / Sammler (× 1,85)</option>
+              </select>
+            </div>
+          </div>
+          <div class="price-row">
+            <label>Grundpreis</label>
+            <input type="number" id="entr-price-m3" step="0.5">
+            <span class="unit">€ / m³</span>
+          </div>
+          <label class="checkbox"><input type="checkbox" id="entr-add-keller"> + Keller (+4 m³)</label>
+          <label class="checkbox"><input type="checkbox" id="entr-add-dach"> + Dachboden (+5 m³)</label>
+          <label class="checkbox"><input type="checkbox" id="entr-add-garage"> + Garage (+6 m³)</label>
+          <div class="field">
+            <label>Volumen manuell überschreiben (m³, optional)</label>
+            <input type="number" id="entr-vol-override" placeholder="leer = automatisch" min="0" step="0.5">
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Elektroschrott</label>
+              <select id="entr-elektro"></select>
+            </div>
+            <div class="field">
+              <label>Sondermüll-Pauschale (€)</label>
+              <input type="number" id="entr-sondermuell" min="0" step="10" value="0">
+              <div class="hint">z. B. Asbest, Öl, Chemie</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-block" data-svc="maler">
+        <div class="service-head" data-svc-head>
+          <label class="service-checkbox" onclick="event.stopPropagation()">
+            <input type="checkbox" id="svc-maler-enabled" data-svc-toggle="maler">
+            <svg class="service-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 11h-9a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M4 4h7l4 5h6v4"/><circle cx="14" cy="20" r="2"/></svg>
+            <span class="service-name">Malerarbeiten</span>
+          </label>
+          <div class="service-info">
+            <span class="service-subtotal empty" id="svc-maler-sub">—</span>
+            <span class="service-toggle">▾</span>
+          </div>
+        </div>
+        <div class="service-body">
+          <div class="svc-hint">Alle Preise unten frei einstellbar</div>
+          <div class="row-2">
+            <div class="field">
+              <label>Wandfläche (m²)</label>
+              <input type="number" id="maler-wand" min="0" step="1" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="maler-price-wand" step="0.5"><span class="unit">€/m²</span></div>
+            </div>
+            <div class="field">
+              <label>Deckenfläche (m²)</label>
+              <input type="number" id="maler-decke" min="0" step="1" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="maler-price-decke" step="0.5"><span class="unit">€/m²</span></div>
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Vorbehandlung</label>
+              <select id="maler-vorbehandlung"></select>
+            </div>
+            <div class="field">
+              <label>Farbtyp</label>
+              <select id="maler-farbe"></select>
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Türen lackieren (Anz.)</label>
+              <input type="number" id="maler-tueren" min="0" step="1" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="maler-price-tuer" step="1"><span class="unit">€/Stk</span></div>
+            </div>
+            <div class="field">
+              <label>Heizkörper lackieren (Anz.)</label>
+              <input type="number" id="maler-heizk" min="0" step="1" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="maler-price-heizk" step="1"><span class="unit">€/Stk</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-block" data-svc="boden">
+        <div class="service-head" data-svc-head>
+          <label class="service-checkbox" onclick="event.stopPropagation()">
+            <input type="checkbox" id="svc-boden-enabled" data-svc-toggle="boden">
+            <svg class="service-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+            <span class="service-name">Bodensanierung</span>
+          </label>
+          <div class="service-info">
+            <span class="service-subtotal empty" id="svc-boden-sub">—</span>
+            <span class="service-toggle">▾</span>
+          </div>
+        </div>
+        <div class="service-body">
+          <div class="svc-hint">Alle Preise unten frei einstellbar</div>
+          <div class="row-2">
+            <div class="field">
+              <label>Alten Belag entfernen (m²)</label>
+              <input type="number" id="boden-alt-qm" min="0" step="1" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="boden-price-raus" step="0.5"><span class="unit">€/m²</span></div>
+            </div>
+            <div class="field">
+              <label>Estrich abbrechen (m²)</label>
+              <input type="number" id="boden-estrich" min="0" step="1" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="boden-price-estrich" step="0.5"><span class="unit">€/m²</span></div>
+            </div>
+          </div>
+          <label class="checkbox"><input type="checkbox" id="boden-ausgleich"> Ausgleichsmasse erforderlich (m² wie Neubelag)</label>
+          <div class="price-row" style="margin-bottom:10px"><label>Preis</label><input type="number" id="boden-price-ausgleich" step="0.5"><span class="unit">€/m²</span></div>
+          <div class="row-2">
+            <div class="field">
+              <label>Neuer Belag (m²)</label>
+              <input type="number" id="boden-neu-qm" min="0" step="1" value="0">
+            </div>
+            <div class="field">
+              <label>Belag-Art</label>
+              <select id="boden-neu-typ"></select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Sockelleisten (lfd. m)</label>
+            <input type="number" id="boden-sockel" min="0" step="0.5" value="0">
+            <div class="price-row"><label>Preis</label><input type="number" id="boden-price-sockel" step="0.5"><span class="unit">€/m</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-block" data-svc="trocken">
+        <div class="service-head" data-svc-head>
+          <label class="service-checkbox" onclick="event.stopPropagation()">
+            <input type="checkbox" id="svc-trocken-enabled" data-svc-toggle="trocken">
+            <svg class="service-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h6V3M9 15h6V9M15 21V15h6"/></svg>
+            <span class="service-name">Trockenbau</span>
+          </label>
+          <div class="service-info">
+            <span class="service-subtotal empty" id="svc-trocken-sub">—</span>
+            <span class="service-toggle">▾</span>
+          </div>
+        </div>
+        <div class="service-body">
+          <div class="svc-hint">Alle Preise unten frei einstellbar</div>
+          <div class="row-2">
+            <div class="field">
+              <label>Neue Trockenwand (m²)</label>
+              <input type="number" id="trocken-neu-qm" min="0" step="0.5" value="0">
+            </div>
+            <div class="field">
+              <label>Wand-Typ</label>
+              <select id="trocken-neu-typ"></select>
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Trockenwand abbrechen (m²)</label>
+              <input type="number" id="trocken-abbruch" min="0" step="0.5" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="trocken-price-abbruch" step="0.5"><span class="unit">€/m²</span></div>
+            </div>
+            <div class="field">
+              <label>Abgehängte Decke (m²)</label>
+              <input type="number" id="trocken-decke" min="0" step="0.5" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="trocken-price-decke" step="0.5"><span class="unit">€/m²</span></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Türaussparungen in Trockenwand (Anz.)</label>
+            <input type="number" id="trocken-tueraussp" min="0" step="1" value="0">
+            <div class="price-row"><label>Preis</label><input type="number" id="trocken-price-tuer" step="1"><span class="unit">€/Stk</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-block" data-svc="abriss">
+        <div class="service-head" data-svc-head>
+          <label class="service-checkbox" onclick="event.stopPropagation()">
+            <input type="checkbox" id="svc-abriss-enabled" data-svc-toggle="abriss">
+            <svg class="service-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l-7 9h4l-2 7 7-9h-4z"/></svg>
+            <span class="service-name">Abriss / Rückbau</span>
+          </label>
+          <div class="service-info">
+            <span class="service-subtotal empty" id="svc-abriss-sub">—</span>
+            <span class="service-toggle">▾</span>
+          </div>
+        </div>
+        <div class="service-body">
+          <div class="svc-hint">Alle Preise unten frei einstellbar</div>
+          <div class="row-2">
+            <div class="field">
+              <label>Innenwände abbrechen (m²)</label>
+              <input type="number" id="abriss-innenwand" min="0" step="0.5" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="abriss-price-innenwand" step="0.5"><span class="unit">€/m²</span></div>
+            </div>
+            <div class="field">
+              <label>Boden + Estrich ausbrechen (m²)</label>
+              <input type="number" id="abriss-boden" min="0" step="0.5" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="abriss-price-boden" step="0.5"><span class="unit">€/m²</span></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Fliesen abschlagen Wand (m²)</label>
+            <input type="number" id="abriss-fliesen" min="0" step="0.5" value="0">
+            <div class="price-row"><label>Preis</label><input type="number" id="abriss-price-fliesen" step="0.5"><span class="unit">€/m²</span></div>
+          </div>
+          <label class="checkbox"><input type="checkbox" id="abriss-bad"> Bad-Komplettdemontage (Sanitär+Fliesen+Estrich)</label>
+          <div class="price-row" style="margin-bottom:10px"><label>Preis</label><input type="number" id="abriss-price-bad" step="10"><span class="unit">€ Pausch.</span></div>
+          <label class="checkbox"><input type="checkbox" id="abriss-kueche"> Küche-Demontage komplett</label>
+          <div class="price-row" style="margin-bottom:10px"><label>Preis</label><input type="number" id="abriss-price-kueche" step="10"><span class="unit">€ Pausch.</span></div>
+          <div class="row-2">
+            <div class="field">
+              <label>Türzargen entfernen (Anz.)</label>
+              <input type="number" id="abriss-zargen" min="0" step="1" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="abriss-price-zarge" step="1"><span class="unit">€/Stk</span></div>
+            </div>
+            <div class="field">
+              <label>Heizkörper demontieren (Anz.)</label>
+              <input type="number" id="abriss-heizk" min="0" step="1" value="0">
+              <div class="price-row"><label>Preis</label><input type="number" id="abriss-price-heizk" step="1"><span class="unit">€/Stk</span></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Schutt-Container</label>
+            <select id="abriss-container"></select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-title"><span class="num">3</span> Logistik</div>
+    <div class="section-box">
+      <div class="row-2">
+        <div class="field">
+          <label>Etage</label>
+          <select id="log-etage">
+            <option value="0" selected>Erdgeschoss</option>
+            <option value="1">1. OG</option>
+            <option value="2">2. OG</option>
+            <option value="3">3. OG</option>
+            <option value="4">4. OG oder höher</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Aufzug?</label>
+          <select id="log-aufzug">
+            <option value="no" selected>Nein</option>
+            <option value="yes">Ja</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label>Anfahrt von Leimen (km)</label>
+          <input type="number" id="log-km" min="0" step="1" value="0">
+          <div class="price-row">
+            <label>Frei bis</label><input type="number" id="log-price-anfahrt-incl-km" step="1"><span class="unit">km</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Anzahl Fahrten</label>
+          <input type="number" id="log-fahrten" min="1" step="1" value="1">
+          <div class="hint">z. B. 2 bei Bodensanierung + Malerarbeiten</div>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="price-row"><label>Pauschale</label><input type="number" id="log-price-anfahrt-base" step="1"><span class="unit">€/Fahrt</span></div>
+        <div class="price-row"><label>je km</label><input type="number" id="log-price-anfahrt-per-km" step="0.1"><span class="unit">€/km</span></div>
+      </div>
+      <div class="anfahrt-info" id="anfahrt-info-box">
+        1 Fahrt · 0 km · im Festpreis enthalten
+      </div>
+
+      <div class="field" style="margin-top:10px">
+        <label>Tragweg Container ↔ Wohnung (m)</label>
+        <input type="number" id="log-tragweg" min="0" step="1" value="15">
+        <div class="row-2" style="margin-top:6px">
+          <div class="price-row"><label>Frei bis</label><input type="number" id="log-price-tragweg-incl" step="1"><span class="unit">m</span></div>
+          <div class="price-row"><label>je m</label><input type="number" id="log-price-tragweg-per-m" step="0.1"><span class="unit">€/m</span></div>
+        </div>
+      </div>
+      <label class="checkbox" style="margin-top:10px"><input type="checkbox" id="log-halteverbot"> Halteverbotszone einrichten</label>
+      <div class="price-row"><label>Preis</label><input type="number" id="log-price-halteverbot" step="5"><span class="unit">€ Pausch.</span></div>
+    </div>
+
+    <div class="section-title"><span class="num">4</span> Konditionen (Gesamt)</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Schutzausrüstung / Hygienemaßnahmen</label>
+        <select id="kon-psa"></select>
+        <div class="hint">Standard z. B. bei Messi · Erweitert z. B. bei Verwesungs- / Verwahrlosungsfällen</div>
+      </div>
+      <label class="checkbox"><input type="checkbox" id="kon-eilfall"> Eilfall &lt; 48 Stunden</label>
+      <div class="price-row" style="margin-bottom:10px"><label>Zuschlag</label><input type="number" id="log-price-eilfall-pct" step="1"><span class="unit">% auf Gesamt</span></div>
+      <label class="checkbox"><input type="checkbox" id="kon-wochenende"> Wochenende / Feiertag</label>
+      <div class="price-row" style="margin-bottom:10px"><label>Zuschlag</label><input type="number" id="log-price-wochenende-pct" step="1"><span class="unit">% auf Gesamt</span></div>
+      <div class="field" style="margin-top:8px">
+        <label>Wertanrechnung (verwertbare Möbel etc.) − €</label>
+        <input type="number" id="kon-wertanrechnung" min="0" step="10" value="0">
+        <div class="hint">Wird vom Festpreis abgezogen</div>
+      </div>
+    </div>
+
+    <div class="section-title"><span class="num">5</span> Eigene Positionen (optional)</div>
+    <div class="section-box">
+      <div class="positions-list" id="positions-list"></div>
+      <div class="row-2">
+        <div class="field" style="margin-bottom:6px">
+          <label>Beschreibung</label>
+          <input type="text" id="pos-desc" placeholder="z. B. Demontage Einbauküche">
+        </div>
+        <div class="field" style="margin-bottom:6px">
+          <label>Betrag €</label>
+          <input type="number" id="pos-amt" step="0.01" placeholder="z. B. 280">
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:10px">
+        <label>Detailtext (optional)</label>
+        <input type="text" id="pos-detail" placeholder="z. B. inkl. Demontage und Entsorgung">
+        <div class="hint">Erscheint im Angebot als kleine Unterzeile. Leer lassen, wenn keine nötig ist.</div>
+      </div>
+      <div class="field" style="margin-bottom:10px">
+        <label>Kategorie / gehört zu</label>
+        <select id="pos-category"></select>
+        <div class="hint">Ordnet die Position einer bestehenden Leistung zu (z. B. Bodensanierung), einer eigenen Kategorie, oder „Sonstige Leistungen“.</div>
+      </div>
+      <button class="btn btn-add" onclick="addPosition()">+ Position hinzufügen</button>
+    </div>
+
+    <div class="section-title"><span class="num">6</span> Zahlung &amp; Darstellung</div>
+    <div class="section-box">
+      <div class="field">
+        <label>Text Zahlungsbedingungen</label>
+        <textarea id="inp-zahlung">Der Festpreis ist nach erfolgter Räumung und besenreiner Übergabe in bar oder per Überweisung innerhalb 7 Tagen ohne Abzug fällig. Bei Aufträgen ab 1.500 € netto behalten wir uns eine Anzahlung in Höhe von 30 % bei Auftragsannahme vor. Es gelten unsere AGB.</textarea>
+      </div>
+      <label class="checkbox"><input type="checkbox" id="opt-signature"> Unterschriftsfelder im Angebot anzeigen</label>
+      <div class="hint" style="margin-left:24px;margin-top:-2px">Nur einschalten, wenn das Angebot vor Ort unterschrieben werden soll.</div>
+    </div>
+
+    <div class="calc-summary">
+      <div class="label" id="live-total-label">Festpreis brutto</div>
+      <div class="val" id="live-total">0,00 €</div>
+      <div class="breakdown" id="live-breakdown">netto · zzgl. MwSt</div>
+    </div>
+
+    <button class="btn btn-save" onclick="saveDraft()">Als Entwurf speichern</button>
+    <button class="btn btn-print" onclick="window.print()">Angebot drucken / als PDF</button>
+  </div>
+</aside>
+
+<main class="preview-panel">
+  <article class="a4-page" id="page1">
+    <img class="print-logo" id="logo-print" src="HM Logo.svg" alt="Logo">
+    <table class="page-frame">
+      <tbody>
+        <tr>
+          <td class="page-body">
+            <div class="sender-line" id="prev-sender-line">HeinzelMänner GmbH · Im Hagen 4 · 69181 Leimen</div>
+            <div class="address-box" id="prev-recipient"></div>
+            <table class="meta-table">
+              <tr><td>Angebot Nr.</td><td id="prev-offer-id">–</td></tr>
+              <tr><td>Datum</td><td id="prev-date-today">–</td></tr>
+              <tr><td>Wunschtermin</td><td id="prev-date">–</td></tr>
+              <tr><td>Reserviert bis</td><td id="prev-valid">–</td></tr>
+              <tr><td>Sachbearbeiter</td><td id="prev-clerk">–</td></tr>
+            </table>
+            <h1 class="doc-title" id="prev-event">Festpreisangebot</h1>
+            <div class="doc-subtitle" id="prev-subtitle">Festpreisangebot</div>
+            <p style="font-size:10pt;margin-bottom:3mm;font-weight:600" id="prev-greeting">Sehr geehrte Damen und Herren,</p>
+            <div class="intro-text" id="prev-intro"></div>
+            <div class="object-grid" id="prev-object-bar">
+              <div><div class="lbl">Objekt-Adresse</div><div class="val" id="prev-obj-addr">–</div></div>
+              <div><div class="lbl">Etage</div><div class="val" id="prev-obj-etage">Erdgeschoss</div></div>
+              <div><div class="lbl">Termin</div><div class="val" id="prev-obj-termin">nach Vereinbarung</div></div>
+            </div>
+            <div id="prev-services-container"></div>
+            <div id="prev-surcharges-wrap" style="display:none">
+              <div class="surcharge-head">Logistik &amp; Konditionen (auf Gesamtsumme)</div>
+              <table class="calc-table" style="margin-bottom:5mm">
+                <tbody id="prev-surcharges-tbody"></tbody>
+              </table>
+            </div>
+            <table class="tax-table">
+              <tr><td>Zwischensumme netto</td><td id="prev-netto">0,00 €</td></tr>
+              <tr id="prev-mwst-row"><td>zzgl. 19 % MwSt.</td><td id="prev-mwst">0,00 €</td></tr>
+              <tr><td>Gesamtbetrag brutto</td><td id="prev-brutto-line">0,00 €</td></tr>
+            </table>
+            <div class="total-box">
+              <div>
+                <span class="badge">Festpreis garantiert</span>
+                <div class="label" id="prev-total-label">Gesamtbetrag brutto</div>
+              </div>
+              <div class="price" id="prev-total">0,00 €</div>
+            </div>
+            <div class="included" id="prev-included">
+              <h3>Im Festpreis enthalten</h3>
+              <ul id="prev-included-list"></ul>
+            </div>
+            <div class="zahlung" id="prev-zahlung"></div>
+            <div class="signature-row">
+              <div class="sig">Ort, Datum</div>
+              <div class="sig">Unterschrift Auftraggeber</div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td class="page-foot">
+            <div class="doc-footer" id="prev-doc-footer"></div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </article>
+</main>
 
 <script src="config.js"></script>
 <script>
 'use strict';
 
-let settings = loadSettings();
+const settings = loadSettings();
+
+const state = {
+  positions: [],
+  meta: {},
+  draftIndex: null
+};
+
+const TYPE_LABELS = {
+  '1zi':'1-Zimmer-Wohnung','2zi':'2-Zimmer-Wohnung','3zi':'3-Zimmer-Wohnung',
+  '4zi':'4-Zimmer-Wohnung','5zi':'5+ Zimmer / Maisonette','efh':'Einfamilienhaus',
+  'mfh':'Mehrfamilienhaus','kel':'Keller','dach':'Dachboden','gar':'Garage',
+  'gew':'Gewerbe / Büro / Lager','sonst':'Objekt nach Vereinbarung'
+};
+const FURNISH_LABELS = {'0.6':'Leicht möbliert','1.0':'Normal möbliert','1.4':'Voll möbliert','1.85':'Messi / Sammler'};
+const ETAGE_LABELS = {0:'Erdgeschoss',1:'1. Obergeschoss',2:'2. Obergeschoss',3:'3. Obergeschoss',4:'4. OG oder höher'};
+const ETAGE_PCT = {0:0, 1:0.04, 2:0.08, 3:0.14, 4:0.20};
+const SVC_KEYS = ['entr','maler','boden','trocken','abriss'];
+const SVC_LABEL = {entr:'Entrümpelung', maler:'Malerarbeiten', boden:'Bodensanierung', trocken:'Trockenbau', abriss:'Abriss / Rückbau'};
+
+const SVC_INCLUSIONS = {
+  entr: [
+    'Vollständiges Ausräumen aller vereinbarten Räume',
+    'Sortenreine, fachgerechte Entsorgung',
+    'Komplettes Räumteam inkl. Container',
+    'Entsorgungsnachweise auf Wunsch'
+  ],
+  maler: [
+    'Abdecken von Möbeln, Böden und Schutzbereichen',
+    'Vorbereitung der Flächen (säubern, ggf. abkleben)',
+    'Material – Standardfarbe (Weiß) inklusive',
+    'Werkzeug, Aufräumen und Entsorgung Verpackung'
+  ],
+  boden: [
+    'Vorbereitung und Reinigung des Untergrunds',
+    'Verlegung inkl. Verschnitt',
+    'Fachgerechte Entsorgung des Altmaterials',
+    'Endkehren der bearbeiteten Fläche'
+  ],
+  trocken: [
+    'Materialanlieferung und Aufbau',
+    'Dämmung und Verfugung',
+    'Erstes Schleifen der Fugen',
+    'Bauschutt-Entsorgung'
+  ],
+  abriss: [
+    'Demontage gemäß Auftragsumfang',
+    'Sortenreine Bauschutt-Trennung',
+    'Vollständige Entsorgung über Container',
+    'Entsorgungsnachweise auf Wunsch'
+  ]
+};
+const COMMON_INCLUSIONS = [
+  'Besenreine Übergabe der Arbeitsflächen',
+  'Vollumfänglicher Versicherungsschutz',
+  'Schriftlicher Festpreis – keine Nachforderungen'
+];
+
+const MIN_AUFTRAG = settings.prices.kon_min_auftrag;
 
 function init(){
-  renderCompany();
-  renderCategories();
-  renderPriceGroups();
-  buildModalNav();
-  renderDrafts();
+  applyCompany();
+  buildDynamicSelects();
+  applyPriceDefaults();
+  buildCategorySelect();
+
+  const params = new URLSearchParams(window.location.search);
+  let recipient = '';
+  if (params.has('recipient')){
+    try { recipient = decodeURIComponent(escape(atob(params.get('recipient')))); }
+    catch(e){ recipient = params.get('recipient'); }
+  }
+  setVal('meta-recipient', recipient);
+  setVal('meta-event',      params.get('event') || '');
+  setVal('meta-location',   params.get('location') || '');
+  setVal('meta-date',       params.get('date') || '');
+  setVal('meta-valid-until',params.get('validUntil') || '');
+  setVal('meta-offer-id',   params.get('offerId') || autoOfferId());
+  setVal('meta-clerk',      params.get('clerk') || '');
+
+  if (params.has('draftIndex')){
+    state.draftIndex = parseInt(params.get('draftIndex'), 10);
+    const drafts = getDrafts();
+    const d = drafts[state.draftIndex];
+    if (d) restoreFromDraft(d);
+  }
+
+  document.querySelectorAll('input,select,textarea').forEach(el => {
+    el.addEventListener('input', render);
+    el.addEventListener('change', render);
+  });
+
+  renderPositionsList();
+  render();
 }
 
-/* ---------- Einstellungen-Modal ---------- */
-const MODAL_SECTIONS = [
-  {key:'company', label:'Firmendaten'},
-  {key:'categories', label:'Kategorien'}
-].concat(PRICE_GROUPS.map(g => ({key:g.key, label:g.label})));
+function setVal(id, v){
+  const el = document.getElementById(id);
+  if (el && v != null && v !== '') el.value = v;
+}
 
-function buildModalNav(){
-  const nav = document.getElementById('modal-nav');
-  nav.innerHTML = MODAL_SECTIONS.map((s, i) =>
-    `<button class="modal-nav-item${i===0?' active':''}" data-panel-target="${s.key}" onclick="showModalPanel('${s.key}')">${escapeHtml(s.label)}</button>`
-  ).join('');
+function autoOfferId(){
+  const last = parseInt(localStorage.getItem(HM_STORAGE.lastId) || '100', 10) + 1;
+  localStorage.setItem(HM_STORAGE.lastId, String(last));
+  return 'AG-' + String(last).padStart(3, '0') + '-' + new Date().getFullYear();
 }
-function showModalPanel(key){
-  document.querySelectorAll('.modal-nav-item').forEach(el => el.classList.toggle('active', el.dataset.panelTarget === key));
-  document.querySelectorAll('.modal-panel').forEach(el => el.classList.toggle('active', el.dataset.panel === key));
-}
-function openSettings(){
-  document.getElementById('settings-modal').classList.add('open');
-  showModalPanel('company');
-}
-function closeSettings(){
-  document.getElementById('settings-modal').classList.remove('open');
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeSettings();
-});
-document.getElementById('settings-modal').addEventListener('click', e => {
-  if (e.target.id === 'settings-modal') closeSettings();
-});
 
-/* ---------- Firmendaten ---------- */
-function renderCompany(){
-  document.getElementById('comp-name').value    = settings.company.name;
-  document.getElementById('comp-gf').value       = settings.company.geschaeftsfuehrer;
-  document.getElementById('comp-strasse').value  = settings.company.strasse;
-  document.getElementById('comp-plzort').value   = settings.company.plzOrt;
-  document.getElementById('comp-tel').value      = settings.company.tel;
-  document.getElementById('comp-mobil').value    = settings.company.mobil;
-  document.getElementById('comp-email').value    = settings.company.email;
-  document.getElementById('comp-ustid').value    = settings.company.ustid;
-  document.getElementById('comp-logo').value     = settings.company.logo;
+function applyCompany(){
+  const c = settings.company;
+  document.getElementById('logo-editor').src = c.logo;
+  document.getElementById('logo-print').src = c.logo;
+  document.getElementById('prev-sender-line').textContent = c.name + ' · ' + c.strasse + ' · ' + c.plzOrt;
+  document.getElementById('prev-doc-footer').innerHTML =
+    '<div><strong>' + escapeHtml(c.name) + '</strong>Hausmeister Dienste und<br>Gebäude Service<br>' + escapeHtml(c.strasse) + '<br>' + escapeHtml(c.plzOrt) + '</div>' +
+    '<div><strong>Kontakt</strong>Tel.: ' + escapeHtml(c.tel) + '<br>Mobil: ' + escapeHtml(c.mobil) + '<br>' + escapeHtml(c.email) + '</div>' +
+    '<div><strong>Geschäftsführer</strong>' + escapeHtml(c.geschaeftsfuehrer) + '<br>USt-IdNr.<br>' + escapeHtml(c.ustid) + '</div>';
 }
-function readCompanyForm(){
+
+function applyPriceDefaults(){
+  const p = settings.prices;
+  setVal('entr-price-m3', p.entr_rate_m3);
+  setVal('maler-price-wand', p.maler_wand);
+  setVal('maler-price-decke', p.maler_decke);
+  setVal('maler-price-tuer', p.maler_tuer);
+  setVal('maler-price-heizk', p.maler_heizk);
+  setVal('boden-price-raus', p.boden_raus);
+  setVal('boden-price-estrich', p.boden_estrich_raus);
+  setVal('boden-price-ausgleich', p.boden_ausgleich);
+  setVal('boden-price-sockel', p.boden_sockel);
+  setVal('trocken-price-abbruch', p.trocken_abbruch);
+  setVal('trocken-price-decke', p.trocken_decke);
+  setVal('trocken-price-tuer', p.trocken_tuer);
+  setVal('abriss-price-innenwand', p.abriss_innenwand);
+  setVal('abriss-price-boden', p.abriss_boden);
+  setVal('abriss-price-fliesen', p.abriss_fliesen);
+  setVal('abriss-price-bad', p.abriss_bad);
+  setVal('abriss-price-kueche', p.abriss_kueche);
+  setVal('abriss-price-zarge', p.abriss_zarge);
+  setVal('abriss-price-heizk', p.abriss_heizk);
+  setVal('log-price-anfahrt-incl-km', p.log_anfahrt_incl_km);
+  setVal('log-price-anfahrt-base', p.log_anfahrt_base);
+  setVal('log-price-anfahrt-per-km', p.log_anfahrt_per_km);
+  setVal('log-price-tragweg-incl', p.log_tragweg_incl);
+  setVal('log-price-tragweg-per-m', p.log_tragweg_per_m);
+  setVal('log-price-halteverbot', p.log_halteverbot);
+  setVal('log-price-eilfall-pct', p.kon_eilfall_pct);
+  setVal('log-price-wochenende-pct', p.kon_wochenende_pct);
+}
+
+function buildDynamicSelects(){
+  const p = settings.prices;
+
+  fillSelect('entr-elektro', [
+    {value:0, text:'Keine / gering (im Preis)'},
+    {value:p.entr_elektro_mittel, text:'Mittel (4–10 Geräte) +' + fmtNum(p.entr_elektro_mittel) + ' €'},
+    {value:p.entr_elektro_viel,   text:'Viel (Weiße Ware) +' + fmtNum(p.entr_elektro_viel) + ' €'}
+  ]);
+
+  fillSelect('maler-vorbehandlung', [
+    {value:'keine', text:'Keine (Wände sind ok)'},
+    {value:'spachteln', text:'Spachteln + Grundieren (+' + fmtNum(p.maler_vorb_spachteln) + ' €/m²)'},
+    {value:'tapete', text:'Tapeten entfernen (+' + fmtNum(p.maler_vorb_tapete) + ' €/m²)'},
+    {value:'beides', text:'Tapete entfernen + Spachteln (+' + fmtNum(p.maler_vorb_spachteln + p.maler_vorb_tapete) + ' €/m²)'}
+  ]);
+
+  fillSelect('maler-farbe', [
+    {value:'standard', text:'Standard Weiß'},
+    {value:'bunt', text:'Bunte Farbe (+' + fmtNum(p.maler_farbe_bunt) + ' €/m²)'},
+    {value:'edel', text:'Edelfarbe / Latex (+' + fmtNum(p.maler_farbe_edel) + ' €/m²)'}
+  ]);
+
+  fillSelect('boden-neu-typ', [
+    {value:p.boden_vinyl, text:'Vinyl-Klick (' + fmtNum(p.boden_vinyl) + ' €/m²)'},
+    {value:p.boden_laminat, text:'Laminat (' + fmtNum(p.boden_laminat) + ' €/m²)'},
+    {value:p.boden_designboden, text:'Designboden Premium (' + fmtNum(p.boden_designboden) + ' €/m²)'},
+    {value:p.boden_parkett, text:'Parkett Eiche (' + fmtNum(p.boden_parkett) + ' €/m²)'},
+    {value:p.boden_fliesen, text:'Fliesen Standard (' + fmtNum(p.boden_fliesen) + ' €/m²)'}
+  ]);
+
+  fillSelect('trocken-neu-typ', [
+    {value:p.trocken_wand_doppelt, text:'Doppelt beplankt + Dämmung (' + fmtNum(p.trocken_wand_doppelt) + ' €/m²)'},
+    {value:p.trocken_wand_einfach, text:'Einfach beplankt (' + fmtNum(p.trocken_wand_einfach) + ' €/m²)'}
+  ]);
+
+  fillSelect('abriss-container', [
+    {value:0, text:'Kein zusätzlicher Container'},
+    {value:p.abriss_container_7,    text:'1× 7 m³ Container (' + fmtNum(p.abriss_container_7) + ' €)'},
+    {value:p.abriss_container_10,   text:'1× 10 m³ Container (' + fmtNum(p.abriss_container_10) + ' €)'},
+    {value:p.abriss_container_10x2, text:'2× 10 m³ Container (' + fmtNum(p.abriss_container_10x2) + ' €)'}
+  ]);
+
+  fillSelect('kon-psa', [
+    {value:0, text:'Nein, nicht erforderlich'},
+    {value:p.kon_psa_standard, text:'Standard-PSA (FFP3, Handschuhe, Anzug) +' + fmtNum(p.kon_psa_standard) + ' €'},
+    {value:p.kon_psa_erweitert, text:'Erweitert (Vollschutz, Desinfektion, Sonderentsorgung) +' + fmtNum(p.kon_psa_erweitert) + ' €'}
+  ]);
+}
+function fillSelect(id, options){
+  const sel = document.getElementById(id);
+  sel.innerHTML = options.map(function(o){ return '<option value="' + o.value + '">' + escapeHtml(o.text) + '</option>'; }).join('');
+}
+
+function buildCategorySelect(){
+  const sel = document.getElementById('pos-category');
+  const cats = allCategories(settings);
+  let html = '<option value="">Sonstige Leistungen</option>';
+  cats.forEach(function(c){ html += '<option value="' + escapeHtml(c.id) + '">' + escapeHtml(c.label) + '</option>'; });
+  html += '<option value="__new__">+ Neue Kategorie…</option>';
+  sel.innerHTML = html;
+  sel.addEventListener('change', function(){
+    if (sel.value === '__new__'){
+      const name = prompt('Name der neuen Kategorie (z. B. "Elektroarbeiten"):');
+      const cat = addCustomCategory(name);
+      if (cat){
+        settings.categories.push(cat);
+        buildCategorySelect();
+        sel.value = cat.id;
+      } else {
+        sel.value = '';
+      }
+    }
+  });
+}
+
+function restoreFromDraft(d){
+  if (d.fields){
+    Object.keys(d.fields).forEach(function(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === 'checkbox') el.checked = !!d.fields[id];
+      else el.value = d.fields[id];
+    });
+  }
+  if (Array.isArray(d.positions)) state.positions = d.positions.slice();
+}
+
+function addPosition(){
+  const desc = document.getElementById('pos-desc').value.trim();
+  const amt  = parseFloat(document.getElementById('pos-amt').value);
+  const detail = document.getElementById('pos-detail').value.trim();
+  const catSel = document.getElementById('pos-category');
+  const categoryId = catSel.value === '__new__' ? '' : catSel.value;
+  if (!desc || isNaN(amt)){
+    alert('Bitte Beschreibung und Betrag angeben.');
+    return;
+  }
+  state.positions.push({desc:desc, amt:amt, categoryId:categoryId, detail:detail});
+  document.getElementById('pos-desc').value = '';
+  document.getElementById('pos-amt').value = '';
+  document.getElementById('pos-detail').value = '';
+  renderPositionsList();
+  render();
+}
+
+function removePosition(i){
+  state.positions.splice(i, 1);
+  renderPositionsList();
+  render();
+}
+
+function categoryLabel(categoryId){
+  if (!categoryId) return 'Sonstige Leistungen';
+  if (SVC_KEYS.indexOf(categoryId) !== -1) return SVC_LABEL[categoryId];
+  const custom = (settings.categories || []).find(function(c){ return c.id === categoryId; });
+  return custom ? custom.label : 'Sonstige Leistungen';
+}
+
+function renderPositionsList(){
+  const list = document.getElementById('positions-list');
+  if (state.positions.length === 0){
+    list.innerHTML = '<div style="font-size:0.78rem;color:#999;font-style:italic;text-align:center;padding:8px">Noch keine eigenen Positionen</div>';
+    return;
+  }
+  list.innerHTML = state.positions.map(function(p, i){
+    const tooltip = p.desc + (p.detail ? ' — ' + p.detail : '');
+    return '<div class="position-item">' +
+      '<div class="desc" title="' + escapeHtml(tooltip) + '">' + escapeHtml(p.desc) + '<span class="cat-badge">' + escapeHtml(categoryLabel(p.categoryId)) + (p.detail ? ' · ' + escapeHtml(p.detail) : '') + '</span></div>' +
+      '<div class="amt">' + fmt(p.amt) + '</div>' +
+      '<div class="del-x" onclick="removePosition(' + i + ')" title="Entfernen">×</div>' +
+    '</div>';
+  }).join('');
+}
+
+function num(id){ return Math.max(0, parseFloat(document.getElementById(id).value) || 0); }
+function intVal(id){ return Math.max(0, parseInt(document.getElementById(id).value, 10) || 0); }
+function priceVal(id){ return parseFloat(document.getElementById(id).value) || 0; }
+function chk(id){ const el = document.getElementById(id); return el && el.checked; }
+function selectedText(id){ const s = document.getElementById(id); return s.options[s.selectedIndex].text; }
+function selectedDataFactor(id){ const s = document.getElementById(id); return parseFloat(s.options[s.selectedIndex].dataset.factor); }
+
+function calcEntr(){
+  const enabled = chk('svc-entr-enabled');
+  const objType = document.getElementById('entr-type').value;
+  const objLabel = TYPE_LABELS[objType] || 'Objekt';
+  const factor = selectedDataFactor('entr-type');
+  const qm = num('entr-qm');
+  const furnishVal = document.getElementById('entr-furnish').value;
+  const furnish = parseFloat(furnishVal);
+  const ratePerM3 = priceVal('entr-price-m3');
+
+  let vol = qm * factor * furnish;
+  if (chk('entr-add-keller')) vol += 4;
+  if (chk('entr-add-dach'))   vol += 5;
+  if (chk('entr-add-garage')) vol += 6;
+  const override = parseFloat(document.getElementById('entr-vol-override').value);
+  if (!isNaN(override) && override > 0) vol = override;
+  vol = Math.round(vol * 10) / 10;
+
+  const out = document.getElementById('entr-vol-out');
+  if (out) out.textContent = Math.round(vol).toString();
+
+  if (!enabled) return {key:'entr', enabled:enabled, lines:[], subtotal:0};
+
+  const lines = [];
+  const basis = vol * ratePerM3;
+  lines.push({title:'Räumung & Entsorgung – Basis', desc: qm + ' m² Wohnfläche · ' + vol.toString().replace('.',',') + ' m³ × ' + fmtNum(ratePerM3) + ' €/m³', amt:basis});
+
+  const elektro = num('entr-elektro');
+  if (elektro > 0){
+    lines.push({title:'Elektroschrott-Pauschale', desc: selectedText('entr-elektro').replace(/\s*\+.*$/,'').trim(), amt:elektro});
+  }
+  const sond = num('entr-sondermuell');
+  if (sond > 0){
+    lines.push({title:'Sondermüll-Entsorgung', desc:'Fachgerechte Entsorgung gem. Anhang KrWG', amt:sond});
+  }
+
+  const subtotal = lines.reduce(function(s,l){ return s+l.amt; }, 0);
   return {
-    name:              document.getElementById('comp-name').value.trim(),
-    geschaeftsfuehrer: document.getElementById('comp-gf').value.trim(),
-    strasse:           document.getElementById('comp-strasse').value.trim(),
-    plzOrt:            document.getElementById('comp-plzort').value.trim(),
-    tel:               document.getElementById('comp-tel').value.trim(),
-    mobil:             document.getElementById('comp-mobil').value.trim(),
-    email:             document.getElementById('comp-email').value.trim(),
-    ustid:             document.getElementById('comp-ustid').value.trim(),
-    logo:              document.getElementById('comp-logo').value.trim() || 'HM Logo.svg'
+    key:'entr', enabled:enabled, lines:lines, subtotal:subtotal,
+    label:'Entrümpelung',
+    meta: objLabel + ' · ' + qm + ' m² Wohnfläche · ' + vol.toString().replace('.',',') + ' m³ Räumvolumen · ' + (FURNISH_LABELS[furnishVal] || '')
   };
 }
 
-/* ---------- Kategorien ---------- */
-function renderCategories(){
-  const list = document.getElementById('cat-list');
-  let html = '';
-  FIXED_CATEGORIES.forEach(c => {
-    html += `<div class="cat-item fixed"><span>${escapeHtml(c.label)}<span class="tag">fest</span></span></div>`;
-  });
-  settings.categories.forEach(c => {
-    html += `<div class="cat-item">
-      <span>${escapeHtml(c.label)}<span class="tag">eigene</span></span>
-      <span class="del-x" onclick="handleRemoveCategory('${c.id}')" title="Entfernen">×</span>
-    </div>`;
-  });
-  list.innerHTML = html;
-}
-function handleAddCategory(){
-  const input = document.getElementById('cat-new-input');
-  const cat = addCustomCategory(input.value);
-  if (!cat){ flash('Bitte einen Namen eingeben.'); return; }
-  settings = loadSettings();
-  input.value = '';
-  renderCategories();
-  flash('Kategorie „' + cat.label + '“ hinzugefügt ✓');
-}
-function handleRemoveCategory(id){
-  if (!confirm('Diese Kategorie wirklich entfernen? Bereits gespeicherte Angebote behalten ihre Zuordnung als Text.')) return;
-  removeCustomCategory(id);
-  settings = loadSettings();
-  renderCategories();
-}
+function calcMaler(){
+  const enabled = chk('svc-maler-enabled');
+  if (!enabled) return {key:'maler', enabled:enabled, lines:[], subtotal:0};
 
-/* ---------- Preisgruppen ---------- */
-function renderPriceGroups(){
-  const container = document.getElementById('modal-panels');
-  document.querySelectorAll('.modal-panel[data-price-panel]').forEach(el => el.remove());
-  container.insertAdjacentHTML('beforeend', PRICE_GROUPS.map(group => `
-    <div class="modal-panel" data-panel="${group.key}" data-price-panel>
-      <h3>${escapeHtml(group.label)}</h3>
-      ${group.fields.map(f => `
-        <div class="field-grid">
-          <label>${escapeHtml(f.label)}</label>
-          <input type="number" step="0.01" id="price_${f.id}" value="${settings.prices[f.id]}">
-          <span class="unit">${escapeHtml(f.unit)}</span>
-        </div>
-      `).join('')}
-    </div>
-  `).join(''));
-}
-function readPricesForm(){
-  const prices = {};
-  PRICE_GROUPS.forEach(group => {
-    group.fields.forEach(f => {
-      const el = document.getElementById('price_' + f.id);
-      const v = parseFloat(el.value);
-      prices[f.id] = isNaN(v) ? PRICE_DEFAULTS[f.id] : v;
-    });
-  });
-  return prices;
-}
+  const lines = [];
+  const wand = num('maler-wand');
+  const decke = num('maler-decke');
+  const vorb = document.getElementById('maler-vorbehandlung').value;
+  const farbe = document.getElementById('maler-farbe').value;
+  const tueren = intVal('maler-tueren');
+  const heizk = intVal('maler-heizk');
+  const pWand = priceVal('maler-price-wand'), pDecke = priceVal('maler-price-decke');
+  const pTuer = priceVal('maler-price-tuer'), pHeizk = priceVal('maler-price-heizk');
+  const pVorbSpachteln = settings.prices.maler_vorb_spachteln, pVorbTapete = settings.prices.maler_vorb_tapete;
+  const pFarbeBunt = settings.prices.maler_farbe_bunt, pFarbeEdel = settings.prices.maler_farbe_edel;
 
-/* ---------- Speichern / Zurücksetzen ---------- */
-function handleSaveAll(){
-  settings.company = readCompanyForm();
-  settings.prices  = readPricesForm();
-  saveSettings(settings);
-  flash('Einstellungen gespeichert ✓');
-}
-function handleReset(){
-  if (!confirm('Wirklich alle Preise und Firmendaten auf Werkseinstellungen zurücksetzen? Eigene Kategorien bleiben erhalten.')) return;
-  const activeItem = document.querySelector('.modal-nav-item.active');
-  const activeKey = activeItem ? activeItem.dataset.panelTarget : 'company';
-  settings.prices  = Object.assign({}, PRICE_DEFAULTS);
-  settings.company = Object.assign({}, COMPANY_DEFAULTS);
-  saveSettings(settings);
-  renderCompany();
-  renderPriceGroups();
-  showModalPanel(activeKey);
-  flash('Werkseinstellungen wiederhergestellt ✓');
-}
+  if (wand > 0) lines.push({title:'Wände streichen', desc: wand + ' m² × ' + fmtNum(pWand) + ' €/m² · Standard 1-Anstrich', amt: wand * pWand});
+  if (decke > 0) lines.push({title:'Decke streichen', desc: decke + ' m² × ' + fmtNum(pDecke) + ' €/m²', amt: decke * pDecke});
 
-/* ---------- Entwürfe ---------- */
-function renderDrafts(){
-  const drafts = getDrafts();
-  const list = document.getElementById('drafts-list');
-  if (drafts.length === 0){
-    list.innerHTML = '<div class="empty-state">Noch keine Entwürfe gespeichert. Klicke oben rechts auf „+ Neues Angebot“, um zu starten.</div>';
-    return;
+  let vorbPrice = 0, vorbLabel = '';
+  if (vorb === 'spachteln')  { vorbPrice = pVorbSpachteln; vorbLabel = 'Spachteln + Grundieren'; }
+  else if (vorb === 'tapete'){ vorbPrice = pVorbTapete;    vorbLabel = 'Tapeten entfernen'; }
+  else if (vorb === 'beides'){ vorbPrice = pVorbSpachteln + pVorbTapete; vorbLabel = 'Tapete entfernen + Spachteln/Grundieren'; }
+  if (vorbPrice > 0 && wand > 0){
+    lines.push({title:'Vorbehandlung Wände', desc: vorbLabel + ' · ' + wand + ' m² × ' + fmtNum(vorbPrice) + ' €/m²', amt: wand * vorbPrice});
   }
-  list.innerHTML = drafts.map((d, i) => `
-    <div class="draft-item">
-      <div class="info">
-        <div class="name">${escapeHtml(d.recipient ? d.recipient.split('\n')[0] : (d.event || 'Ohne Empfänger'))}</div>
-        <div class="meta">${escapeHtml(d.event || '')}${d.event ? ' · ' : ''}gespeichert ${escapeHtml(d.savedAt || '')}</div>
-      </div>
-      <div class="total">${fmt(d.totalBrutto)}</div>
-      <div class="actions">
-        <a class="open-btn" href="angebot.html?draftIndex=${i}">Öffnen</a>
-        <button class="del-btn" onclick="handleDeleteDraft(${i})">Löschen</button>
-      </div>
-    </div>
-  `).join('');
-}
-function handleDeleteDraft(i){
-  if (!confirm('Diesen Entwurf wirklich löschen?')) return;
-  const drafts = getDrafts();
-  drafts.splice(i, 1);
-  saveDrafts(drafts);
-  renderDrafts();
+
+  let farbeAuf = 0, farbeLab = '';
+  if (farbe === 'bunt'){ farbeAuf = pFarbeBunt; farbeLab = 'Bunte Farbe'; }
+  else if (farbe === 'edel'){ farbeAuf = pFarbeEdel; farbeLab = 'Edelfarbe / Latex'; }
+  if (farbeAuf > 0 && (wand + decke) > 0){
+    lines.push({title:'Farbaufpreis (' + farbeLab + ')', desc: (wand + decke) + ' m² × ' + fmtNum(farbeAuf) + ' €/m²', amt: (wand + decke) * farbeAuf});
+  }
+
+  if (tueren > 0) lines.push({title:'Türen lackieren', desc: tueren + ' × ' + fmtNum(pTuer) + ' € pro Tür (beide Seiten)', amt: tueren * pTuer});
+  if (heizk > 0)  lines.push({title:'Heizkörper lackieren', desc: heizk + ' × ' + fmtNum(pHeizk) + ' € pro Stück', amt: heizk * pHeizk});
+
+  const subtotal = lines.reduce(function(s,l){ return s+l.amt; }, 0);
+  const metaParts = [];
+  if (wand > 0)  metaParts.push(wand + ' m² Wandfläche');
+  if (decke > 0) metaParts.push(decke + ' m² Decke');
+  if (tueren > 0) metaParts.push(tueren + ' Türen');
+  if (heizk > 0)  metaParts.push(heizk + ' Heizkörper');
+  return {key:'maler', enabled:enabled, lines:lines, subtotal:subtotal, label:'Malerarbeiten', meta: metaParts.join(' · ')};
 }
 
-/* ---------- Accordion ---------- */
-document.addEventListener('click', e => {
-  const head = e.target.closest('[data-card-head]');
+function calcBoden(){
+  const enabled = chk('svc-boden-enabled');
+  if (!enabled) return {key:'boden', enabled:enabled, lines:[], subtotal:0};
+
+  const lines = [];
+  const altQm = num('boden-alt-qm');
+  const estrich = num('boden-estrich');
+  const ausgleich = chk('boden-ausgleich');
+  const neuQm = num('boden-neu-qm');
+  const neuPrice = parseFloat(document.getElementById('boden-neu-typ').value);
+  const neuLabel = selectedText('boden-neu-typ').replace(/\s*\(.*$/,'').trim();
+  const sockel = num('boden-sockel');
+  const pRaus = priceVal('boden-price-raus'), pEstrich = priceVal('boden-price-estrich');
+  const pAusgleich = priceVal('boden-price-ausgleich'), pSockel = priceVal('boden-price-sockel');
+
+  if (altQm > 0)   lines.push({title:'Alten Bodenbelag entfernen', desc: altQm + ' m² × ' + fmtNum(pRaus) + ' €/m² inkl. Entsorgung', amt: altQm * pRaus});
+  if (estrich > 0) lines.push({title:'Estrich abbrechen', desc: estrich + ' m² × ' + fmtNum(pEstrich) + ' €/m² inkl. Schuttentsorgung', amt: estrich * pEstrich});
+  if (ausgleich && neuQm > 0) lines.push({title:'Bodenausgleichsmasse', desc: neuQm + ' m² × ' + fmtNum(pAusgleich) + ' €/m² inkl. Material', amt: neuQm * pAusgleich});
+  if (neuQm > 0)   lines.push({title:'Neuer Bodenbelag (' + neuLabel + ')', desc: neuQm + ' m² × ' + fmtNum(neuPrice) + ' €/m² inkl. Material', amt: neuQm * neuPrice});
+  if (sockel > 0)  lines.push({title:'Sockelleisten anbringen', desc: sockel + ' lfd. m × ' + fmtNum(pSockel) + ' €/m inkl. Material', amt: sockel * pSockel});
+
+  const subtotal = lines.reduce(function(s,l){ return s+l.amt; }, 0);
+  const mp = [];
+  if (altQm > 0) mp.push(altQm + ' m² Altbelag raus');
+  if (neuQm > 0) mp.push(neuQm + ' m² neu (' + neuLabel + ')');
+  if (sockel > 0) mp.push(sockel + ' m Sockelleisten');
+  return {key:'boden', enabled:enabled, lines:lines, subtotal:subtotal, label:'Bodensanierung', meta: mp.join(' · ')};
+}
+
+function calcTrocken(){
+  const enabled = chk('svc-trocken-enabled');
+  if (!enabled) return {key:'trocken', enabled:enabled, lines:[], subtotal:0};
+
+  const lines = [];
+  const neuQm = num('trocken-neu-qm');
+  const neuPrice = parseFloat(document.getElementById('trocken-neu-typ').value);
+  const neuLabel = selectedText('trocken-neu-typ').replace(/\s*\(.*$/,'').trim();
+  const abbruch = num('trocken-abbruch');
+  const decke = num('trocken-decke');
+  const aussp = intVal('trocken-tueraussp');
+  const pAbbruch = priceVal('trocken-price-abbruch'), pDecke = priceVal('trocken-price-decke'), pTuer = priceVal('trocken-price-tuer');
+
+  if (neuQm > 0)   lines.push({title:'Neue Trockenbauwand (' + neuLabel + ')', desc: neuQm + ' m² × ' + fmtNum(neuPrice) + ' €/m² inkl. Material', amt: neuQm * neuPrice});
+  if (abbruch > 0) lines.push({title:'Trockenwand abbrechen', desc: abbruch + ' m² × ' + fmtNum(pAbbruch) + ' €/m² inkl. Entsorgung', amt: abbruch * pAbbruch});
+  if (decke > 0)   lines.push({title:'Abgehängte Decke', desc: decke + ' m² × ' + fmtNum(pDecke) + ' €/m² inkl. Dämmung', amt: decke * pDecke});
+  if (aussp > 0)   lines.push({title:'Türaussparungen', desc: aussp + ' × ' + fmtNum(pTuer) + ' € pro Aussparung inkl. Rahmen', amt: aussp * pTuer});
+
+  const subtotal = lines.reduce(function(s,l){ return s+l.amt; }, 0);
+  const mp = [];
+  if (neuQm > 0)   mp.push(neuQm + ' m² neue Wand');
+  if (abbruch > 0) mp.push(abbruch + ' m² Abbruch');
+  if (decke > 0)   mp.push(decke + ' m² abgehängte Decke');
+  return {key:'trocken', enabled:enabled, lines:lines, subtotal:subtotal, label:'Trockenbau', meta: mp.join(' · ')};
+}
+
+function calcAbriss(){
+  const enabled = chk('svc-abriss-enabled');
+  if (!enabled) return {key:'abriss', enabled:enabled, lines:[], subtotal:0};
+
+  const lines = [];
+  const innen = num('abriss-innenwand');
+  const boden = num('abriss-boden');
+  const fliesen = num('abriss-fliesen');
+  const bad = chk('abriss-bad');
+  const kueche = chk('abriss-kueche');
+  const zargen = intVal('abriss-zargen');
+  const heizkDem = intVal('abriss-heizk');
+  const cont = num('abriss-container');
+  const pInnenwand = priceVal('abriss-price-innenwand'), pBoden = priceVal('abriss-price-boden');
+  const pFliesen = priceVal('abriss-price-fliesen'), pBad = priceVal('abriss-price-bad');
+  const pKueche = priceVal('abriss-price-kueche'), pZarge = priceVal('abriss-price-zarge'), pHeizk = priceVal('abriss-price-heizk');
+
+  if (innen > 0)    lines.push({title:'Innenwände abbrechen', desc: innen + ' m² × ' + fmtNum(pInnenwand) + ' €/m² · nicht-tragend, inkl. Entsorgung', amt: innen * pInnenwand});
+  if (boden > 0)    lines.push({title:'Boden + Estrich ausbrechen', desc: boden + ' m² × ' + fmtNum(pBoden) + ' €/m² inkl. Schuttentsorgung', amt: boden * pBoden});
+  if (fliesen > 0)  lines.push({title:'Wandfliesen abschlagen', desc: fliesen + ' m² × ' + fmtNum(pFliesen) + ' €/m²', amt: fliesen * pFliesen});
+  if (bad)          lines.push({title:'Bad-Komplettdemontage', desc:'Sanitär, Wandfliesen, Bodenfliesen, Estrich inkl. Entsorgung', amt: pBad});
+  if (kueche)       lines.push({title:'Küche-Komplettdemontage', desc:'Schränke, Arbeitsplatten, Geräte, Anschlüsse abklemmen', amt: pKueche});
+  if (zargen > 0)   lines.push({title:'Türzargen entfernen', desc: zargen + ' × ' + fmtNum(pZarge) + ' € pro Stück', amt: zargen * pZarge});
+  if (heizkDem > 0) lines.push({title:'Heizkörper demontieren', desc: heizkDem + ' × ' + fmtNum(pHeizk) + ' € pro Stück inkl. Entkopplung', amt: heizkDem * pHeizk});
+  if (cont > 0)     lines.push({title:'Schutt-Container', desc: selectedText('abriss-container').replace(/^\d+×\s*/,''), amt: cont});
+
+  const subtotal = lines.reduce(function(s,l){ return s+l.amt; }, 0);
+  const mp = [];
+  if (innen > 0) mp.push(innen + ' m² Innenwand');
+  if (boden > 0) mp.push(boden + ' m² Boden raus');
+  if (bad)       mp.push('Bad-Komplettdemontage');
+  if (kueche)    mp.push('Küche-Demontage');
+  return {key:'abriss', enabled:enabled, lines:lines, subtotal:subtotal, label:'Abriss / Rückbau', meta: mp.join(' · ')};
+}
+
+function calcAnfahrt(fahrten) {
+  const km = num('log-km');
+  const inclKm = priceVal('log-price-anfahrt-incl-km');
+  const base = priceVal('log-price-anfahrt-base');
+  const perKm = priceVal('log-price-anfahrt-per-km');
+  fahrten = Math.max(1, fahrten);
+
+  let kostenProFahrt = 0;
+  let descProFahrt = '';
+
+  if (km === 0) {
+    return { lines: [], total: 0, infoText: fahrten + ' Fahrt' + (fahrten>1?'en':'') + ' · 0 km · im Festpreis enthalten' };
+  } else if (km <= inclKm) {
+    kostenProFahrt = base;
+    descProFahrt = 'Pauschale bis ' + inclKm + ' km (' + km + ' km Anfahrt)';
+  } else {
+    kostenProFahrt = base + (km - inclKm) * perKm;
+    descProFahrt = fmtNum(base) + ' € Pauschale + (' + km + '−' + inclKm + ') × ' + fmtNum(perKm) + ' €/km';
+  }
+
+  const gesamtKosten = kostenProFahrt * fahrten;
+  const lines = [];
+
+  if (fahrten === 1) {
+    lines.push({ title: 'Anfahrt', desc: descProFahrt, amt: kostenProFahrt });
+  } else {
+    lines.push({
+      title: 'Anfahrt (' + fahrten + '× Fahrt)',
+      desc: fahrten + ' × ' + fmt(kostenProFahrt) + ' · ' + descProFahrt,
+      amt: gesamtKosten
+    });
+  }
+
+  const infoText = fahrten + ' Fahrt' + (fahrten>1?'en':'') + ' · ' + km + ' km · ' + fmt(kostenProFahrt) + ' pro Fahrt · gesamt ' + fmt(gesamtKosten);
+  return { lines: lines, total: gesamtKosten, infoText: infoText };
+}
+
+function calcSurcharges(servicesSubtotal, fahrten){
+  const lines = [];
+
+  const etage = parseInt(document.getElementById('log-etage').value, 10);
+  const aufzug = document.getElementById('log-aufzug').value === 'yes';
+  if (!aufzug && ETAGE_PCT[etage] > 0 && servicesSubtotal > 0){
+    const etageZ = Math.round(servicesSubtotal * ETAGE_PCT[etage]);
+    lines.push({title:'Etagen-Zuschlag ' + etage + '. OG (ohne Aufzug)', desc: (ETAGE_PCT[etage]*100).toFixed(0) + ' % auf Leistungs-Summe', amt: etageZ});
+  }
+
+  const anfahrtCalc = calcAnfahrt(fahrten);
+  anfahrtCalc.lines.forEach(function(l){ lines.push(l); });
+
+  const tragweg = num('log-tragweg');
+  const tragwegIncl = priceVal('log-price-tragweg-incl');
+  const tragwegPerM = priceVal('log-price-tragweg-per-m');
+  if (tragweg > tragwegIncl){
+    const trag = (tragweg - tragwegIncl) * tragwegPerM;
+    lines.push({title:'Tragweg-Zuschlag', desc: tragweg + ' m, davon ' + (tragweg-tragwegIncl) + ' m über Pauschale × ' + fmtNum(tragwegPerM) + ' €/m', amt: trag});
+  }
+
+  if (chk('log-halteverbot')){
+    lines.push({title:'Halteverbotszone', desc:'Antrag, Beschilderung & Aufstellung', amt: priceVal('log-price-halteverbot')});
+  }
+
+  const psa = num('kon-psa');
+  if (psa > 0){
+    const label = psa === settings.prices.kon_psa_erweitert
+      ? 'Erweitert: Vollschutz, Desinfektion, Sonderentsorgung der PSA'
+      : 'Standard: FFP3-Masken, Schutzanzüge, Handschuhe';
+    lines.push({title:'Schutzausrüstung & Hygienemaßnahmen', desc: label, amt: psa});
+  }
+
+  return lines;
+}
+
+function calcTotal(){
+  const fahrten = Math.max(1, intVal('log-fahrten') || 1);
+  const services = [calcEntr(), calcMaler(), calcBoden(), calcTrocken(), calcAbriss()];
+
+  const sections = {};
+  const order = [];
+  services.forEach(function(s){
+    sections[s.key] = {label: SVC_LABEL[s.key], lines: s.lines.slice(), subtotal: s.subtotal, meta: s.meta, checkboxOn: s.enabled};
+    order.push(s.key);
+  });
+
+  state.positions.forEach(function(p){
+    const catId = p.categoryId || '';
+    const key = catId === '' ? 'sonstige' : catId;
+    const label = categoryLabel(catId);
+    if (!sections[key]){
+      sections[key] = {label: label, lines:[], subtotal:0, meta:'', checkboxOn:false};
+      order.push(key);
+    }
+    const line = {title:p.desc, desc: p.detail ? escapeHtml(p.detail) : '', amt:p.amt};
+    sections[key].lines.push(line);
+    sections[key].subtotal += p.amt;
+  });
+
+  const orderedKeys = order.filter(function(k){ return k !== 'sonstige' && (sections[k].checkboxOn || sections[k].lines.length > 0); });
+  if (sections['sonstige'] && sections['sonstige'].lines.length > 0) orderedKeys.push('sonstige');
+
+  orderedKeys.forEach(function(k){
+    const badge = document.getElementById('svc-' + k + '-sub');
+    if (badge){
+      if (sections[k].subtotal > 0){ badge.textContent = fmt(sections[k].subtotal); badge.classList.remove('empty'); }
+      else { badge.textContent = '—'; badge.classList.add('empty'); }
+    }
+  });
+  SVC_KEYS.forEach(function(k){
+    const block = document.querySelector('.service-block[data-svc="' + k + '"]');
+    if (block) block.classList.toggle('enabled', sections[k] ? sections[k].checkboxOn : false);
+  });
+
+  const servicesSubtotal = orderedKeys.reduce(function(s,k){ return s + sections[k].subtotal; }, 0);
+
+  const surchargeLines = servicesSubtotal > 0 ? calcSurcharges(servicesSubtotal, fahrten) : [];
+  const surchargeTotal = surchargeLines.reduce(function(s,l){ return s+l.amt; }, 0);
+
+  const eilfall = chk('kon-eilfall');
+  const wochenende = chk('kon-wochenende');
+  const eilfallPct = priceVal('log-price-eilfall-pct') / 100;
+  const wochenendePct = priceVal('log-price-wochenende-pct') / 100;
+  let mult = 1;
+  if (eilfall) mult *= (1 + eilfallPct);
+  if (wochenende) mult *= (1 + wochenendePct);
+  const subBeforeMult = servicesSubtotal + surchargeTotal;
+  const multSurcharge = subBeforeMult * (mult - 1);
+
+  const wert = num('kon-wertanrechnung');
+  const mwstPct = settings.prices.kon_mwst_pct / 100;
+
+  let netto = subBeforeMult + multSurcharge - wert;
+  const minNetto = MIN_AUFTRAG / (1 + mwstPct);
+  let mindestAusgleich = 0;
+  if (netto < minNetto && servicesSubtotal > 0){
+    mindestAusgleich = minNetto - netto;
+    netto = minNetto;
+  }
+  if (netto < 0) netto = 0;
+
+  const nettoVorRundung = netto;
+  let brutto = netto * (1 + mwstPct);
+  brutto = Math.round(brutto / 10) * 10;
+  const finalNetto = brutto / (1 + mwstPct);
+  const finalMwst = brutto - finalNetto;
+  const rundungNetto = finalNetto - nettoVorRundung;
+
+  const anfahrtInfo = calcAnfahrt(fahrten);
+  const infoBox = document.getElementById('anfahrt-info-box');
+  if (infoBox) infoBox.textContent = anfahrtInfo.infoText;
+
+  return {
+    sections: sections, orderedKeys: orderedKeys, surchargeLines: surchargeLines, fahrten: fahrten,
+    servicesSubtotal: servicesSubtotal, surchargeTotal: surchargeTotal, multSurcharge: multSurcharge, wert: wert,
+    mindestAusgleich: mindestAusgleich, rundungNetto: rundungNetto,
+    eilfall: eilfall, wochenende: wochenende, mwstPct: mwstPct,
+    netto: finalNetto, mwst: finalMwst, brutto: brutto
+  };
+}
+
+function render(){
+  const calc = calcTotal();
+
+  const meta = {
+    recipient: document.getElementById('meta-recipient').value,
+    event:     document.getElementById('meta-event').value,
+    location:  document.getElementById('meta-location').value,
+    date:      document.getElementById('meta-date').value,
+    validUntil:document.getElementById('meta-valid-until').value,
+    offerId:   document.getElementById('meta-offer-id').value,
+    clerk:     document.getElementById('meta-clerk').value
+  };
+  state.meta = meta;
+
+  document.getElementById('hdr-offer-id').textContent = meta.offerId || 'AG-···';
+
+  const sigOn = chk('opt-signature');
+  document.getElementById('page1').classList.toggle('show-signature', sigOn);
+
+  const kundentyp = document.getElementById('meta-kundentyp').value;
+  const isGeschaeftlich = kundentyp === 'geschaeftlich';
+  const headlineAmt = isGeschaeftlich ? calc.netto : calc.brutto;
+
+  document.getElementById('live-total-label').textContent = isGeschaeftlich ? 'Festpreis netto' : 'Festpreis brutto';
+  document.getElementById('live-total').textContent = fmt(headlineAmt);
+  const enabledCount = calc.orderedKeys.length;
+  document.getElementById('live-breakdown').textContent =
+    (enabledCount > 0 ? (enabledCount + ' Leistungsblock' + (enabledCount !== 1 ? 'e' : '') + ' aktiv · ') : 'Noch keine Leistung aktiviert · ') +
+    (isGeschaeftlich ? 'netto maßgeblich · brutto ' + fmt(calc.brutto) : 'brutto maßgeblich · netto ' + fmt(calc.netto)) +
+    (calc.fahrten > 1 ? ' · ' + calc.fahrten + '× Anfahrt' : '') +
+    (calc.eilfall ? ' · +Eilfall' : '') +
+    (calc.wochenende ? ' · +Wochenende' : '') +
+    (calc.wert > 0 ? ' · −' + fmt(calc.wert) + ' Anrechnung' : '');
+
+  const activeLabels = calc.orderedKeys.filter(function(k){ return k !== 'sonstige'; }).map(function(k){ return calc.sections[k].label; });
+  let dynSubtitle = 'Festpreisangebot';
+  if (activeLabels.length === 1) dynSubtitle += ' · ' + activeLabels[0];
+  else if (activeLabels.length === 2) dynSubtitle += ' · ' + activeLabels.join(' & ');
+  else if (activeLabels.length > 2) dynSubtitle += ' · ' + activeLabels.slice(0, -1).join(', ') + ' & ' + activeLabels.slice(-1);
+  document.getElementById('prev-subtitle').textContent = dynSubtitle;
+
+  document.getElementById('prev-recipient').textContent = meta.recipient || '(Empfänger eingeben in Abschnitt 0)';
+  document.getElementById('prev-event').textContent = meta.event || (activeLabels.length > 0 ? 'Festpreisangebot ' + activeLabels.join(' / ') : 'Festpreisangebot');
+  document.getElementById('prev-offer-id').textContent = meta.offerId || '–';
+  document.getElementById('prev-date-today').textContent = formatDate(new Date().toISOString().split('T')[0]);
+  document.getElementById('prev-date').textContent = meta.date ? formatDate(meta.date) : '–';
+  document.getElementById('prev-valid').textContent = meta.validUntil ? formatDate(meta.validUntil) : '–';
+  document.getElementById('prev-clerk').textContent = meta.clerk || '–';
+
+  document.getElementById('prev-greeting').textContent = document.getElementById('inp-greeting').value;
+  document.getElementById('prev-intro').textContent = document.getElementById('inp-intro').value;
+
+  const etage = parseInt(document.getElementById('log-etage').value, 10);
+  const aufzug = document.getElementById('log-aufzug').value === 'yes';
+  document.getElementById('prev-obj-addr').textContent = meta.location || '–';
+  document.getElementById('prev-obj-etage').textContent = (ETAGE_LABELS[etage] || '–') + (aufzug ? ' · mit Aufzug' : '');
+  document.getElementById('prev-obj-termin').textContent = meta.date ? formatDate(meta.date) : 'nach Vereinbarung';
+
+  const svcContainer = document.getElementById('prev-services-container');
+  let svcHtml = '';
+  calc.orderedKeys.forEach(function(key){
+    const s = calc.sections[key];
+    if (s.lines.length === 0) return;
+    svcHtml += '<div class="svc-section"><div class="svc-section-head"><span class="svc-section-title">' + escapeHtml(s.label) + '</span><span class="svc-section-sub">Zwischensumme ' + fmt(s.subtotal) + '</span></div>';
+    if (s.meta) svcHtml += '<div class="svc-section-meta">' + escapeHtml(s.meta) + '</div>';
+    svcHtml += '<table class="calc-table" style="margin-bottom:0"><tbody>';
+    s.lines.forEach(function(l){
+      svcHtml += '<tr><td><div class="pos-title">' + escapeHtml(l.title) + '</div>' + (l.desc ? '<div class="pos-desc">' + l.desc + '</div>' : '') + '</td><td>' + fmt(l.amt) + '</td></tr>';
+    });
+    svcHtml += '</tbody></table></div>';
+  });
+
+  if (svcHtml === ''){
+    svcHtml = '<div style="background:#FAF7F0;border-left:2px solid #9C6B2E;padding:4mm 5mm;color:#5C6670;font-size:9pt;margin:5mm 0">Aktivieren Sie links in Abschnitt 2 die gewünschten Leistungen.</div>';
+  }
+  svcContainer.innerHTML = svcHtml;
+
+  const surWrap = document.getElementById('prev-surcharges-wrap');
+  const surTbody = document.getElementById('prev-surcharges-tbody');
+  let surHtml = '';
+  calc.surchargeLines.forEach(function(l){
+    surHtml += '<tr class="surcharge"><td><div class="pos-title">' + escapeHtml(l.title) + '</div><div class="pos-desc">' + l.desc + '</div></td><td>' + fmt(l.amt) + '</td></tr>';
+  });
+  if (calc.eilfall || calc.wochenende){
+    const tags = [];
+    if (calc.eilfall) tags.push('Eilfall <48 h (+' + priceVal('log-price-eilfall-pct') + ' %)');
+    if (calc.wochenende) tags.push('Wochenende / Feiertag (+' + priceVal('log-price-wochenende-pct') + ' %)');
+    surHtml += '<tr class="surcharge"><td><div class="pos-title">Termin-Zuschlag</div><div class="pos-desc">' + tags.join(' · ') + '</div></td><td>+ ' + fmt(calc.multSurcharge) + '</td></tr>';
+  }
+  if (calc.wert > 0){
+    surHtml += '<tr class="discount"><td><div class="pos-title">Wertanrechnung</div><div class="pos-desc">verwertbare Möbel / Geräte / Sammlerstücke</div></td><td>− ' + fmt(calc.wert) + '</td></tr>';
+  }
+  if (calc.mindestAusgleich > 0.01){
+    surHtml += '<tr class="surcharge"><td><div class="pos-title">Anpassung auf Mindestauftragswert</div><div class="pos-desc">Unser Mindestauftragswert liegt bei ' + fmt(MIN_AUFTRAG) + ' brutto</div></td><td>+ ' + fmt(calc.mindestAusgleich) + '</td></tr>';
+  }
+  if (Math.abs(calc.rundungNetto) > 0.005){
+    const rundSign = calc.rundungNetto > 0 ? '+ ' : '− ';
+    surHtml += '<tr class="' + (calc.rundungNetto > 0 ? 'surcharge' : 'discount') + '"><td><div class="pos-title">Rundung auf glatten Gesamtbetrag</div><div class="pos-desc">Kaufmännische Rundung auf volle 10 €</div></td><td>' + rundSign + fmt(Math.abs(calc.rundungNetto)) + '</td></tr>';
+  }
+  if (surHtml){ surWrap.style.display = ''; surTbody.innerHTML = surHtml; }
+  else        { surWrap.style.display = 'none'; surTbody.innerHTML = ''; }
+
+  document.getElementById('prev-mwst-row').firstElementChild.textContent = 'zzgl. ' + settings.prices.kon_mwst_pct + ' % MwSt.';
+  document.getElementById('prev-netto').textContent = fmt(calc.netto);
+  document.getElementById('prev-mwst').textContent = fmt(calc.mwst);
+  document.getElementById('prev-brutto-line').textContent = fmt(calc.brutto);
+  document.getElementById('prev-total-label').textContent = isGeschaeftlich ? 'Gesamtbetrag netto' : 'Gesamtbetrag brutto';
+  document.getElementById('prev-total').innerHTML = isGeschaeftlich
+    ? fmt(calc.netto) + ' <small>netto, zzgl. MwSt.</small>'
+    : fmt(calc.brutto) + ' <small>brutto</small>';
+  document.getElementById('prev-zahlung').textContent = document.getElementById('inp-zahlung').value;
+
+  const incEl = document.getElementById('prev-included');
+  const incList = document.getElementById('prev-included-list');
+  const activeFixedKeys = calc.orderedKeys.filter(function(k){ return SVC_KEYS.indexOf(k) !== -1 && calc.sections[k].checkboxOn; });
+  if (activeFixedKeys.length === 0){
+    incEl.style.display = 'none';
+  } else {
+    incEl.style.display = '';
+    const items = [];
+    const seen = {};
+    activeFixedKeys.forEach(function(k){
+      (SVC_INCLUSIONS[k] || []).forEach(function(item){
+        if (!seen[item]){ seen[item]=true; items.push(item); }
+      });
+    });
+    COMMON_INCLUSIONS.forEach(function(item){
+      if (!seen[item]){ seen[item]=true; items.push(item); }
+    });
+    incList.innerHTML = items.map(function(t){ return '<li>' + escapeHtml(t) + '</li>'; }).join('');
+  }
+}
+
+document.addEventListener('click', function(e){
+  const head = e.target.closest('[data-svc-head]');
   if (!head) return;
-  head.closest('[data-card]').classList.toggle('expanded');
+  if (e.target.closest('.service-checkbox')) return;
+  head.parentElement.classList.toggle('expanded');
+});
+document.addEventListener('change', function(e){
+  const cb = e.target.closest('input[data-svc-toggle]');
+  if (cb && cb.checked){
+    cb.closest('.service-block').classList.add('expanded');
+  }
 });
 
-/* ---------- Flash ---------- */
+function saveDraft(){
+  const calc = calcTotal();
+  const fields = {};
+  document.querySelectorAll('input[id],select[id],textarea[id]').forEach(function(el){
+    if (el.type === 'checkbox') fields[el.id] = el.checked;
+    else fields[el.id] = el.value;
+  });
+  const draft = Object.assign({}, state.meta, {
+    fields: fields,
+    positions: state.positions,
+    totalBrutto: calc.brutto,
+    savedAt: new Date().toLocaleString('de-DE', {dateStyle:'short', timeStyle:'short'})
+  });
+  const drafts = getDrafts();
+  if (state.draftIndex !== null && drafts[state.draftIndex]){
+    drafts[state.draftIndex] = draft;
+  } else {
+    drafts.unshift(draft);
+    state.draftIndex = 0;
+  }
+  saveDrafts(drafts);
+  flash('Entwurf gespeichert ✓');
+}
+
 function flash(msg){
-  const f = document.getElementById('flash-msg');
+  let f = document.getElementById('flash-msg');
+  if (!f){
+    f = document.createElement('div');
+    f.id = 'flash-msg';
+    f.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1C2B36;color:#fff;padding:11px 22px;border-radius:3px;border-left:3px solid #4B6B4E;font-weight:600;font-size:0.82rem;z-index:9999;transition:opacity 0.3s';
+    document.body.appendChild(f);
+  }
   f.textContent = msg;
   f.style.opacity = '1';
   clearTimeout(window._flashT);
-  window._flashT = setTimeout(() => { f.style.opacity = '0'; }, 1800);
+  window._flashT = setTimeout(function(){ f.style.opacity = '0'; }, 1800);
+}
+
+function formatDate(iso){
+  if (!iso) return '–';
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', year:'numeric'});
 }
 
 init();
